@@ -11,11 +11,7 @@
     {
       "name": "userrank",
       "displayName": "UserRank",
-      "source": {
-        "source": "archive",
-        "url": "https://app.userrank.ai/plugins/userrank-1.0.42.zip",
-        "sha256": "5da52b08eb4861e0212b0be45149f1db373c771956f0b357d0605ad368b9de62"
-      },
+      "source": "./plugins/userrank",
       "description": "See how you work with AI, share a page you control, and learn the practices you're missing. Your own AI reads your sessions; UserRank gets only names and counts.",
       "category": "productivity"
     }

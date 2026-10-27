@@ -1,0 +1,20 @@
+{
+  "name": "userrank",
+  "interface": {
+    "displayName": "UserRank"
+  },
+  "plugins": [
+    {
+      "name": "userrank-codex",
+      "source": {
+        "source": "local",
+        "path": "./plugins/userrank-codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

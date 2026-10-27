@@ -1,0 +1,4988 @@
+{
+ "catalogue_version": "1.0",
+ "items": [
+  {
+   "id": "end-to-end-ship-authority",
+   "version": 2,
+   "capability": "grant-autonomy",
+   "tier": 3,
+   "baseline": false,
+   "family": "delegation",
+   "sophistication": 3,
+   "name": "Let the agent ship end-to-end",
+   "tagline": "It codes, tests, merges and deploys, with no step by you.",
+   "cover_line": "Lets agents ship from fix to deploy.",
+   "adds_over_previous": "The agent owns the whole chain from fix through tests, merge and deploy, with no human step between those stages.",
+   "variants": [
+    "agent merges its own pull request once checks pass and deploys",
+    "agent releases a package or app version after tests"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "A single user-requested agent session goes from code change through running tests, merging to the main branch, and deploying or releasing, with no human action between those steps other than the initial request and automated gates, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "edit, test run, gh pr merge, deploy command in one session"
+     ],
+     "codex": [
+      "same sequence in codex sessions"
+     ],
+     "cursor": [
+      "same sequence in cursor sessions"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The agent opens a pull request and a human merges it.",
+     "Deploy only, without owning the change and merge (that is agent-deploys-with-credentials).",
+     "CI deploys automatically after a human merge."
+    ],
+    "probes": [
+     "In one session, did the agent change code, run tests, merge, and deploy or release?",
+     "Was there no human action between those steps beyond the initial request?",
+     "Did this happen in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Small fixes go from report to production while you do something else.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "unattended-long-mission",
+   "version": 2,
+   "capability": "grant-autonomy",
+   "tier": 4,
+   "baseline": false,
+   "family": "delegation",
+   "sophistication": 4,
+   "name": "Leave agents 1+ hours with done criteria",
+   "tagline": "List what done means, say 'don't stop', and walk away.",
+   "cover_line": "Leaves agents on multi-hour missions.",
+   "adds_over_previous": "The agent runs a mission lasting hours without the user present, against an explicit completion bar the user set, with instructions not to cut scope.",
+   "variants": [
+    "overnight mission with a done checklist",
+    "'do not trim scope; log blockers and continue' instruction"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "The user's brief states an explicit completion bar (checkable conditions for done) and that the agent should continue without the user, AND the session then runs at least 1 hour of agent work with no user message in between, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "long tool-call runs with no user turn, after a brief with a done bar and 'do not stop / do not trim'"
+     ],
+     "codex": [
+      "long codex exec or session runs after such a brief"
+     ],
+     "cursor": [
+      "long background-agent runs after such a brief"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Long sessions in which the user replies every few minutes.",
+     "A single long command (a build) without agent decisions.",
+     "Short scheduled tasks (that is scheduled-tasks)."
+    ],
+    "probes": [
+     "Did the user's brief state a checkable completion bar and ask the agent to continue without them?",
+     "Did the agent then work at least 1 hour with no user message in between?",
+     "Did this happen in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Hours of work get done while you are away, to a standard you set.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "measurable-stop-rule",
+   "version": 2,
+   "capability": "grant-autonomy",
+   "tier": 5,
+   "baseline": false,
+   "family": "delegation",
+   "sophistication": 4,
+   "name": "Hill-climb until the score stops improving",
+   "tagline": "Hill climbing: pick a metric; stop after 2 flat rounds.",
+   "cover_line": "Stops iterating when gains flatten.",
+   "adds_over_previous": "The stop condition of an autonomous loop is a metric defined up front, with the loop ending when its improvement plateaus, instead of a prose completion bar.",
+   "variants": [
+    "stop after N rounds gaining less than a threshold",
+    "metric logged per iteration with a plateau rule"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "Before an iterative improvement loop, the user (or a skill the user wrote) defines a numeric metric and a plateau rule (for example: stop after 2 rounds gaining less than X), and the session tracks the metric across iterations, in at least 1 session in the window. The plateau rule is what separates it from a pass-or-fail bar.",
+    "signals": {
+     "claude-code": [
+      "brief with metric and 'stop when gains plateau'",
+      "per-iteration score log"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same in chats"
+     ],
+     "chatgpt": [
+      "same in chats"
+     ],
+     "config": [
+      "iteration ledger with scores and a stop rule"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A fixed number of iterations without a metric.",
+     "A pass-or-fail completion bar (that is unattended-long-mission).",
+     "A loop that stops when all rubric criteria pass rather than on a plateau (that is rubric-critique-loop).",
+     "A metric reported only at the end."
+    ],
+    "probes": [
+     "Before the loop, did the user or their skill define a numeric metric and a plateau rule?",
+     "Was the metric tracked across iterations, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "You stop paying for rounds that no longer improve anything.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "overnight-agent-queue",
+   "version": 1,
+   "capability": "grant-autonomy",
+   "tier": 5,
+   "baseline": false,
+   "family": "delegation",
+   "sophistication": 5,
+   "name": "Let agents work overnight while you sleep",
+   "tagline": "Line up tasks with done checks, sleep, read the report.",
+   "cover_line": "Wakes up to a night of finished work.",
+   "adds_over_previous": "Several queued tasks, each with a done condition, run through the person's night across task boundaries without them, ending in a written report of what is done and what is blocked for their return.",
+   "variants": [
+    "a task file the agent works through overnight, with a done condition per task",
+    "a script or supervisor that starts the next session when one finishes, through the night",
+    "a morning report of done and blocked items"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "On at least 1 occasion in the window, the person (or a script or skill they wrote) queues at least 2 tasks, each with a stated done condition, for agents to work through without them, AND agent work then runs for at least 4 hours, most of it between 22:00 and 08:00 in the person's local time, across more than one of those tasks with no message from the person (in one session, or in sessions started by a queue, script or supervisor rather than by the person), AND the run ends with a written report of what was done and what is blocked, which the person opens or answers in a later session. Several queued tasks run through the night, with a report for the person's return, are what separate it from unattended-long-mission (one task, at least one hour).",
+    "signals": {
+     "claude-code": [
+      "a brief listing several tasks with done conditions and an instruction to work through them alone overnight",
+      "one session or chained sessions running 4+ hours at night with no user turn",
+      "a final report of done and blocked items, opened or answered in the next session"
+     ],
+     "codex": [
+      "codex exec runs chained over a task file through the night"
+     ],
+     "cursor": [
+      "background agents working through a queue at night"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "One task that runs an hour or more without the person (that is unattended-long-mission).",
+     "A scheduled task that fires at night and finishes in minutes (that is scheduled-tasks).",
+     "Sessions the person keeps answering through the night.",
+     "A single long command such as a build, with no agent decisions."
+    ],
+    "probes": [
+     "Did the person queue at least 2 tasks, each with a done condition, for agents to work through alone?",
+     "Did agent work then run 4+ hours, mostly at night local time, across more than one task with no message from the person?",
+     "Did it end with a report of done and blocked items that the person opened or answered later?"
+    ]
+   },
+   "teach": {
+    "why": "You wake up to finished work and a clear report, not to an agent stuck on step one.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "ask-for-options",
+   "version": 2,
+   "capability": "get-and-judge-options",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 1,
+   "name": "Ask for several alternatives",
+   "tagline": "Say 'give me 3 options', then pick or combine.",
+   "cover_line": "Always asks for alternatives.",
+   "adds_over_previous": "The user asks for multiple distinct alternatives in one request instead of a single answer.",
+   "variants": [
+    "'give me 3 options'",
+    "'two versions: one formal, one casual'"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user explicitly asks for at least 2 alternatives, options or versions of the same output, and then chooses, combines or ranks among them.",
+    "signals": {
+     "claude-code": [
+      "'give me N options/alternatives/variants' then a choice"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same in chats"
+     ],
+     "chatgpt": [
+      "same in chats"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The assistant offered several versions without being asked.",
+     "A list of facts or ideas that are not alternatives for the same output.",
+     "Fully built alternatives delivered ready to use (that is finished-options-human-picks)."
+    ],
+    "probes": [
+     "Did the user explicitly ask for at least 2 alternatives of the same output?",
+     "Did the user then choose, combine or rank among them?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Seeing options side by side shows you what you actually want.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 45,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 12,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "finished-options-human-picks",
+   "version": 2,
+   "capability": "get-and-judge-options",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Get finished versions to pick from",
+   "tagline": "Two full drafts or builds, not outlines; you choose one.",
+   "cover_line": "Judges finished options, not sketches.",
+   "adds_over_previous": "Each alternative is built to a finished, usable state before the user sees it, so the user's role is only to judge between finished results.",
+   "variants": [
+    "two complete implementations on separate branches",
+    "several complete drafts or rendered mockups"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user asks for at least 2 complete, ready-to-use alternatives (full implementations, full drafts, rendered mockups; not outlines or descriptions), the AI delivers them complete, and the user selects one.",
+    "signals": {
+     "claude-code": [
+      "several complete variants built (files, branches, mockups) then the user picks one"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "several complete artifacts then a pick"
+     ],
+     "chatgpt": [
+      "several complete drafts then a pick"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Options described in a few lines (that is ask-for-options).",
+     "Rival agents with personas ranked by judge agents (that is competing-agents-tournament)."
+    ],
+    "probes": [
+     "Did the user ask for at least 2 complete, ready-to-use alternatives?",
+     "Were they delivered complete and did the user select one?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Judging finished things is fast; imagining them from outlines is not.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "competing-agents-tournament",
+   "version": 3,
+   "capability": "get-and-judge-options",
+   "tier": 3,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 5,
+   "name": "Have a judge agent rank rival agents",
+   "tagline": "Rival agents try different strategies; a judge agent ranks.",
+   "cover_line": "Makes agents compete for the answer.",
+   "adds_over_previous": "Several agents with distinct personas or strategies independently produce competing solutions, and separate judge agents rank them before the human sees the result.",
+   "variants": [
+    "persona subagents plus a blind judge subagent",
+    "scripted tournament with several judges"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "At the person's request or through a script or skill the person wrote (not a third-party skill whose own design runs rivals and a judge), at least 2 agents or runs with explicitly different personas or strategies answer the same brief independently, AND at least 1 separate judge agent or run scores or ranks their outputs, on at least 1 occasion in the window. Judge agents ranking rival agents is what separates it from finished-options-human-picks.",
+    "signals": {
+     "claude-code": [
+      "parallel Agent calls with different personas on one brief, then a judge Agent call"
+     ],
+     "codex": [
+      "competing codex runs plus a judge run"
+     ],
+     "cursor": [
+      "competing agents plus a judge"
+     ],
+     "config": [
+      "tournament or competition script and results"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "One assistant listing alternatives (that is ask-for-options).",
+     "The same prompt run several times without distinct personas or strategies.",
+     "The human picks without judge agents (that is finished-options-human-picks)."
+    ],
+    "probes": [
+     "Did at least 2 agents with different personas or strategies answer the same brief independently?",
+     "Did a separate judge agent score or rank them?",
+     "Was it caused by the user, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Competition surfaces ideas a single agent would never reach.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "iterative-refinement",
+   "version": 2,
+   "capability": "verify-ai-work",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 1,
+   "name": "Refine output over several rounds",
+   "tagline": "3+ follow-ups on one draft: 'change X because Y'.",
+   "cover_line": "Never settles for the first draft.",
+   "adds_over_previous": "The user drives several rounds of specific, reasoned change requests on one output instead of accepting or lightly tweaking the first draft.",
+   "variants": [
+    "versioned rounds (v1 to v4) with reasons",
+    "line-level edit requests with targets"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user sends at least 3 follow-up messages on the same output, each requesting a specific change together with a reason or a target (what to change and why, or to what), and the assistant revises each time.",
+    "signals": {
+     "claude-code": [
+      "3+ follow-ups on one output, each with a change and a reason"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "artifact versions driven by reasoned follow-ups"
+     ],
+     "chatgpt": [
+      "3+ reasoned follow-ups on one draft"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "One or two reactive tweaks such as 'shorter' or 'more fun'.",
+     "Follow-ups that start new, unrelated requests in the same chat."
+    ],
+    "probes": [
+     "On one output, did the user send at least 3 follow-ups, each with a specific change and a reason or target?",
+     "Did the assistant revise each time?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Good output is usually the fourth draft, not the first.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 45,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 12,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "rubric-critique-loop",
+   "version": 2,
+   "capability": "verify-ai-work",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 2,
+   "name": "Score drafts against your own criteria",
+   "tagline": "List 3+ criteria; it scores each, fixes, then re-scores.",
+   "cover_line": "Scores work against a rubric.",
+   "adds_over_previous": "Explicit criteria are fixed before revising; the output is scored against them, fixed where it fails, and re-scored.",
+   "variants": [
+    "rubric typed or pasted before the critique",
+    "named rubric invoked from a template",
+    "'revise until it passes all N' with a check table each round"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user (or a template or skill the user wrote) supplies an explicit list of at least 3 criteria before revision, asks for a score or pass/fail per criterion, and after revision a re-score against the same criteria is produced.",
+    "signals": {
+     "claude-code": [
+      "criteria list, per-criterion scores, revision, re-score"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "rubric table before and after revision"
+     ],
+     "chatgpt": [
+      "rubric table before and after revision"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Reactive tweaks without criteria stated up front (that is iterative-refinement).",
+     "A rubric used to grade a set of model or prompt test cases (that is ab-with-control).",
+     "A cheat sheet that mentions rubrics without one being applied."
+    ],
+    "probes": [
+     "Did the user or their template supply at least 3 explicit criteria before revision?",
+     "Was the output scored per criterion and re-scored after revision?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Criteria make 'better' objective, so revisions converge instead of wander.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 18,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 49,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "proof-not-claims",
+   "version": 2,
+   "capability": "verify-ai-work",
+   "tier": 3,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Ask for proof it's done",
+   "tagline": "Say 'show me the test output'; no proof, it takes it back.",
+   "cover_line": "Wants proof, not promises.",
+   "adds_over_previous": "The user requires evidence a third party would accept (query rows, screenshots, test output, sources) for the AI's claims and challenges any claim made without it.",
+   "variants": [
+    "'show me the test output'",
+    "'cite the exact source line'",
+    "standing rule to attach proof or mark UNVERIFIED"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user explicitly asks for evidence of a claim that something is done, correct or true (test output, query result, screenshot, source line or link) or challenges a claim as unverified, AND the AI then produces the evidence or retracts the claim.",
+    "signals": {
+     "claude-code": [
+      "'show me the output / prove it / is this verified?' then evidence or retraction"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "user asks for sources or checks a claim; assistant cites or retracts"
+     ],
+     "chatgpt": [
+      "user asks for sources or checks a claim; assistant cites or retracts"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The assistant attached evidence on its own without being asked.",
+     "The user points out an error without asking for evidence.",
+     "A standing instruction that the agent audits its own completeness (that is honesty-self-audit)."
+    ],
+    "probes": [
+     "Did the user ask for evidence of a claim, or challenge a claim as unverified?",
+     "Did the AI produce evidence or retract?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Confident claims are cheap; evidence is what you can rely on.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "honesty-self-audit",
+   "version": 3,
+   "capability": "verify-ai-work",
+   "tier": 4,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Have the agent list what it skipped",
+   "tagline": "Before 'done', it checks each thing you asked, gaps first.",
+   "cover_line": "Makes agents confess the gaps.",
+   "adds_over_previous": "The agent must answer literally whether it did what was asked, item by item and leading with gaps, before it may claim completion.",
+   "variants": [
+    "typed demand at the end of a task",
+    "standing instruction or skill requiring the audit before any done claim"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, at the person's request (typed, or through an instruction, skill or hook the person wrote; an installed third-party skill that fires on its own does not count), the agent produces an item-by-item check of the original request against what it did, listing gaps or undone items first, before or instead of a completion claim.",
+    "signals": {
+     "claude-code": [
+      "'did you do what was asked?' answered item by item, gaps first",
+      "skill or hook requiring it"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same in chats"
+     ],
+     "chatgpt": [
+      "same in chats"
+     ],
+     "config": [
+      "instruction or skill rule requiring a literal self-audit before done"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A generic summary of changes.",
+     "Evidence demanded for one specific claim (that is proof-not-claims).",
+     "A hook that blocks finishing until an external state holds (that is hook-enforced-done-gate)."
+    ],
+    "probes": [
+     "Did the agent produce an item-by-item check of the request against what it did, gaps first?",
+     "Was it caused by the user's request or their loaded instruction, skill or hook?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Agents quietly skip parts of a request; this shows the gaps before you rely on it.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "transcript-forensics",
+   "version": 2,
+   "capability": "verify-ai-work",
+   "tier": 5,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 5,
+   "name": "Check agent claims against its session log",
+   "tagline": "Have a new agent read the session file and list mismatches.",
+   "cover_line": "Checks what agents did, not said.",
+   "adds_over_previous": "An agent reads a previous agent's raw transcript or tool log to compare what it actually did against what it claimed.",
+   "variants": [
+    "reading local session files of an earlier run",
+    "auditing a subagent's tool log"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "The user directs an agent to read another session's raw transcript or tool-call log (session files, exported conversation) and to compare what it claimed with what it actually did, and the agent produces that comparison, on at least 1 occasion in the window.",
+    "signals": {
+     "claude-code": [
+      "reads of ~/.claude/projects/*.jsonl or another agent's logs with a claimed-vs-actual table"
+     ],
+     "codex": [
+      "reads of ~/.codex/sessions logs for an audit"
+     ],
+     "cursor": [
+      "reads of exported agent logs for an audit"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Reading only the final summary of an earlier session.",
+     "Reading past sessions to mine preferences (that is instructions-mined-from-own-history).",
+     "Reading end users' sessions to debug a product (that is user-session-as-bug-report)."
+    ],
+    "probes": [
+     "Did the user direct an agent to read another session's raw transcript or tool log?",
+     "Did the agent compare claimed with actual actions, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A final message can overclaim; the record of what it ran cannot.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "ask-for-sources",
+   "version": 1,
+   "capability": "check-sources",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 2,
+   "name": "Ask for sources behind claims",
+   "tagline": "Type 'cite a source for every claim', or set it as a rule.",
+   "cover_line": "Wants a source behind every claim.",
+   "adds_over_previous": "The user requires the AI to attach a source (link, document name, page or quote) to its factual claims, instead of accepting unsourced answers.",
+   "variants": [
+    "'cite your sources' or 'link every claim' in the request",
+    "Project, custom or standing instructions requiring a citation for every claim",
+    "'quote the passage from the attached document that supports this'"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "config"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user's request, or a Project, custom or standing instruction the user wrote, asks the AI to cite sources for its claims (links, file names, pages or quotes), and the answers carry those citations. Requiring citations is what separates it from deliberate-web-search, which only turns search on.",
+    "signals": {
+     "claude-code": [
+      "'link the docs or sources you used' in requests, answers with links"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "'cite sources' or 'cite the file name' in the request or Project instructions",
+      "answers with bracketed file names or links"
+     ],
+     "chatgpt": [
+      "'cite sources' in the request or custom instructions",
+      "answers with links the user asked for"
+     ],
+     "config": [
+      "Project or custom instructions requiring citations"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Citations the assistant or its search feature added by default without the user asking.",
+     "Asking the AI to search without asking for citations (that is deliberate-web-search).",
+     "Requests for evidence that work is done, such as test output or screenshots (that is proof-not-claims)."
+    ],
+    "probes": [
+     "Did the user, or a standing instruction they wrote, ask the AI to cite sources for its claims?",
+     "Did the answers carry those citations?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "You can check anything that matters in one click.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 18,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 49,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "verify-cited-sources",
+   "version": 1,
+   "capability": "check-sources",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Check AI claims against cited sources",
+   "tagline": "Open the cited page or ask for the quote; correct the claim.",
+   "cover_line": "Opens the citation before trusting it.",
+   "adds_over_previous": "The user checks a cited source against the AI's claim (opens it, re-reads the cited passage, or has the AI quote it) and challenges or corrects the claim when they differ.",
+   "variants": [
+    "user reads the cited file or link and reports a mismatch",
+    "'quote the exact sentence from that source'",
+    "user has the AI re-open the cited page and confirm the claim"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 1 session in the window, after the AI cites a source for a claim, the user checks the claim against that source (reports what the source actually says, asks for the exact supporting passage, or has the AI re-open the source), and the claim is confirmed or corrected as a result. Checking a cited source, not only asking for one, is what separates it from ask-for-sources.",
+    "signals": {
+     "claude-code": [
+      "'that doc says X, not Y, recheck' after a cited answer"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "'the file says 6 weeks, not 4, recheck' after a bracketed citation; corrected answer"
+     ],
+     "chatgpt": [
+      "'quote the sentence from that link' after a cited answer; confirmation or correction"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The user asks for sources but never checks one (that is ask-for-sources).",
+     "The user disputes a claim from memory, with no cited source checked (that is proof-not-claims).",
+     "Errors in dates or arithmetic that the user spots with no source involved."
+    ],
+    "probes": [
+     "Did the AI cite a source for a claim?",
+     "Did the user check the claim against that source (reported its content, asked for the exact passage, or had it re-opened)?",
+     "Was the claim then confirmed or corrected, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Citations can be wrong too; one check shows how far to trust the rest.",
+    "minutes": 6
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "failing-test-first",
+   "version": 3,
+   "capability": "prove-with-tests",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Write the failing test first",
+   "tagline": "Write the test, watch it fail, then make it pass.",
+   "cover_line": "Writes the failing test first.",
+   "adds_over_previous": "Each change is preceded by a named proof test, written first and seen failing, that the implementation must then turn green.",
+   "variants": [
+    "user writes the tests; the agent implements without editing them",
+    "agent writes the test first and shows it failing before implementing"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, at the person's request or under an instruction the person wrote (not a third-party skill or plugin that imposes test-first on its own), a test for the target behaviour is written before the implementation, is run and shown failing, and the implementation then makes it pass.",
+    "signals": {
+     "claude-code": [
+      "test written, run red, then implementation, run green"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "instruction rule requiring a failing test first"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Tests written after the implementation.",
+     "Tests not run before implementing.",
+     "A test whose purpose is a demonstration for a reviewer (that is demo-test-for-reviewer)."
+    ],
+    "probes": [
+     "Was a test written before the implementation, caused by the user or their instruction?",
+     "Was it run and shown failing before implementation, then passing after?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A test seen failing first proves the change actually did something.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "demo-test-for-reviewer",
+   "version": 2,
+   "capability": "prove-with-tests",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Write a demo test for your reviewer",
+   "tagline": "Write a test that shows the change working; link its output.",
+   "cover_line": "Proves features with demo tests.",
+   "adds_over_previous": "A test is written specifically to demonstrate the behaviour to a human reviewer, and its run report is linked in the handover.",
+   "variants": [
+    "story-style end-to-end test with an HTML report link",
+    "recorded test run linked in the pull request"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "The user (or an instruction the user wrote) asks for a test whose stated purpose is to demonstrate behaviour to a reviewer, and the test's run output or report link is included in the pull request or handover, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "demo or showcase test written and its report linked in the PR"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "test report artifacts linked from PR descriptions"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Ordinary unit tests with no report shared.",
+     "Screenshots shared without a test."
+    ],
+    "probes": [
+     "Did the user or their instruction ask for a test meant to demonstrate behaviour to a reviewer?",
+     "Was its run output or report link included in the handover, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Reviewers trust a passing demo more than a description.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "rules-as-tests",
+   "version": 2,
+   "capability": "prove-with-tests",
+   "tier": 3,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Enforce CLAUDE.md rules with lint or tests",
+   "tagline": "A test fails when an agent breaks a CLAUDE.md rule.",
+   "cover_line": "Turns broken rules into tests.",
+   "adds_over_previous": "A convention an agent violated is encoded as an automated check that fails on violation, instead of remaining only a written instruction.",
+   "variants": [
+    "custom lint rule",
+    "architecture or convention test in the suite"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "A convention that agents must follow (from an instruction file, a skill, or a past agent violation) is encoded, by the user or an agent at the user's request, as an automated test, lint rule or check that fails when the convention is broken, and it was added or ran in the window. Enforcement by an automated check, rather than a written rule, is what separates it from correction-to-rule.",
+    "signals": {
+     "claude-code": [
+      "session adding a lint rule or test after an agent broke a convention",
+      "check run in a gate"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "custom lint rules or convention tests referencing instruction-file rules"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The rule is only added to an instruction file (that is correction-to-rule).",
+     "General linting or test setup that does not encode an agent-facing convention.",
+     "A checklist command, skill or prompt asking the agent to check conventions (instructions, not an automated test or lint rule)."
+    ],
+    "probes": [
+     "Is there an automated test, lint rule or check that encodes a convention agents must follow?",
+     "Was it created by the user or at their request?",
+     "Was it added or run in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Agents ignore instructions sometimes; a failing test they cannot ignore.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "real-host-e2e",
+   "version": 3,
+   "capability": "prove-with-tests",
+   "tier": 4,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Make agents test in the real app",
+   "tagline": "Run it in the real browser, app or service, and report.",
+   "cover_line": "Proves it where it really runs.",
+   "adds_over_previous": "The proof runs end to end in the real host environment with real dependencies, with mocks of the system under test disallowed.",
+   "variants": [
+    "test in the real app or browser",
+    "test inside the real agent host",
+    "test against the real external service"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the person (or an instruction the person wrote) requires verification in the real runtime with no mocks of the system under test, and the agent runs it there and reports the result from that host.",
+    "signals": {
+     "claude-code": [
+      "'no mocks, prove it for real' then a run in the real app, browser or agent host"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "instruction rule banning mocks for proof"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Unit tests with mocked clients.",
+     "A staging run that still stubs the dependency in question."
+    ],
+    "probes": [
+     "Did the user or their instruction require no-mock verification in the real runtime?",
+     "Did the agent run it there and report the result from that host?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A mock only proves the mock works; the real app proves the product does.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "plan-before-execute",
+   "version": 3,
+   "capability": "plan-before-acting",
+   "tier": 1,
+   "baseline": false,
+   "family": "delegation",
+   "sophistication": 2,
+   "name": "Plan before the agent acts",
+   "tagline": "Turn on plan mode or say 'plan first'; approve, then go.",
+   "cover_line": "Approves the plan before the work.",
+   "adds_over_previous": "Before consequential work, the agent produces a plan or blocking questions and the user approves or edits it before any change is made.",
+   "variants": [
+    "plan mode with approval",
+    "'plan first, ask me your questions, do not change anything yet'"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the person enables plan mode or asks in their own words for a plan or questions first (a plan step an installed plugin's skill imposes on every task does not count), and the agent makes no change until the person approves or edits the plan (an explicit approval or edit message, or an approved plan-mode exit).",
+    "signals": {
+     "claude-code": [
+      "plan mode with approved exit",
+      "'plan first, do not change anything' then approval"
+     ],
+     "codex": [
+      "plan requested and approved before edits"
+     ],
+     "cursor": [
+      "plan mode or plan-then-approve"
+     ],
+     "claude-ai": [
+      "plan requested, approved, then executed"
+     ],
+     "chatgpt": [
+      "plan requested, approved, then executed"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The agent outlines steps but proceeds without approval.",
+     "A plan document requested as the deliverable, with no execution following."
+    ],
+    "probes": [
+     "Did the user enable plan mode or ask for a plan or questions first?",
+     "Did the agent wait for the user's approval or edit before changing anything?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Fixing a plan costs a minute; fixing the work costs an hour.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 18,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 49,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "failure-mode-premortem",
+   "version": 3,
+   "capability": "plan-before-acting",
+   "tier": 2,
+   "baseline": false,
+   "family": "delegation",
+   "sophistication": 3,
+   "name": "Ask what could go wrong first",
+   "tagline": "Before the work, have it list the ways it could fail.",
+   "cover_line": "Lists how it could fail, first.",
+   "adds_over_previous": "Before building, the ways the work could fail are enumerated, and after building each one is explicitly verified.",
+   "variants": [
+    "premortem list in the plan, checked at the end",
+    "risk register the agent closes item by item"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the person (or a skill the person wrote; a third-party skill that lists risks on its own does not count) asks for the ways the work could fail (failure modes, risks, what could go wrong) to be enumerated before the work is done. A later check against each is a supporting signal, not a requirement. Enumerating failure modes is what separates it from plan-before-execute.",
+    "signals": {
+     "claude-code": [
+      "'list how this could fail first' / premortem request before building"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same in chats"
+     ],
+     "chatgpt": [
+      "same in chats"
+     ],
+     "config": [
+      "skill rule requiring a premortem"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A plan without failure modes (that is plan-before-execute).",
+     "A risks section the agent added to a plan on its own without being asked."
+    ],
+    "probes": [
+     "Did the user or their skill ask for failure modes or risks to be enumerated before the work?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Naming the ways it could fail first means you actually check for them.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "independent-reviewer-agent",
+   "version": 4,
+   "capability": "review-with-other-agents",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Have another agent review",
+   "tagline": "A subagent or new chat, not the author, checks the work.",
+   "cover_line": "Gets a second agent to review.",
+   "adds_over_previous": "A separate agent instance with fresh context reviews the work, instead of the author agent checking itself.",
+   "variants": [
+    "reviewer subagent",
+    "fresh session given only the result and the request",
+    "review bot the user configured"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "At the person's request, or through a skill or workflow the person set up themselves (a review bot that someone else installed on the repository counts only when the person asked for its review), a reviewer that is independent of the author reviews work produced by an AI, and its findings are acted on or answered, in at least 1 session in the window. Independent means a separate agent instance that neither produced nor revises the work: a subagent, another agent session or CLI, a review bot the user set up, or, on chat surfaces, a conversation outside the conversation and Project where the work was produced, used only to review it. This separation is what distinguishes it from honesty-self-audit and rubric-critique-loop.",
+    "signals": {
+     "claude-code": [
+      "reviewer Agent call or review session on another agent's work",
+      "review skill invocation"
+     ],
+     "codex": [
+      "codex review run on work done elsewhere"
+     ],
+     "cursor": [
+      "review agent run"
+     ],
+     "claude-ai": [
+      "work pasted into a fresh chat with a review request"
+     ],
+     "chatgpt": [
+      "work pasted into a fresh chat with a review request"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The same agent re-reads its own work in the same context (that is honesty-self-audit).",
+     "Human code review only.",
+     "A review bot someone else configured.",
+     "The same assistant critiques and then revises its own work within one conversation or one Project (that is rubric-critique-loop or iterative-refinement).",
+     "A new chat in the same Project in which the assistant both critiques and rewrites the pasted work."
+    ],
+    "probes": [
+     "Did a reviewer review AI-produced work, caused by the user or their configured skill or workflow?",
+     "Was the reviewer a separate instance that neither produced nor revises the work (on chat surfaces: outside that conversation and Project)?",
+     "Were the findings acted on or answered, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Fresh eyes catch what the author agent cannot see.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "multi-lens-reviewers",
+   "version": 3,
+   "capability": "review-with-other-agents",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Give each reviewer agent one focus",
+   "tagline": "e.g. one checks security, one correctness; merge findings.",
+   "cover_line": "Reviews through several lenses.",
+   "adds_over_previous": "Several reviewers run on the same work, each with a non-overlapping mandate written into its brief, under a findings contract requiring checkable findings.",
+   "variants": [
+    "parallel reviewer subagents by lens (correctness, security, clarity)",
+    "review skill that dispatches lens-specific reviewers"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "At the person's request naming the different focuses, or through a skill the person wrote, at least 2 reviewer agents run on the same work with explicitly different mandates written into their briefs, and their findings are consolidated, in at least 1 session in the window. A third-party review command that runs several reviewers on its own credits that command; the person's request for a review counts toward independent-reviewer-agent only.",
+    "signals": {
+     "claude-code": [
+      "parallel reviewer Agent calls with lens-specific briefs"
+     ],
+     "codex": [
+      "several codex review runs with different mandates"
+     ],
+     "cursor": [
+      "several review agents with different mandates"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single reviewer (that is independent-reviewer-agent).",
+     "One reviewer asked to check several aspects at once."
+    ],
+    "probes": [
+     "Did at least 2 reviewer agents run on the same work with different written mandates?",
+     "Were their findings consolidated, at least once in the window, caused by the user?"
+    ]
+   },
+   "teach": {
+    "why": "Each reviewer goes deep on one thing instead of shallow on everything.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "cross-vendor-review",
+   "version": 2,
+   "capability": "review-with-other-agents",
+   "tier": 3,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Have another company's AI review",
+   "tagline": "E.g. ChatGPT reviews Claude's work; act on what it finds.",
+   "cover_line": "Lets rival models check each other.",
+   "adds_over_previous": "The reviewer runs on a model from a different vendor than the author agent, so the two models' blind spots are less correlated.",
+   "variants": [
+    "another vendor's CLI invoked to review",
+    "work pasted into another vendor's assistant with a review request"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "Work produced with one vendor's model is reviewed, at the user's request, by a model from a different vendor (through a CLI, an API, or the user pasting it into the other vendor's assistant with a review request), and the findings are brought back to the work, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "Bash call running another vendor's CLI (for example codex exec or codex review) on the work"
+     ],
+     "codex": [
+      "codex reviewing work produced by another vendor's agent"
+     ],
+     "cursor": [
+      "other-vendor model selected to review"
+     ],
+     "claude-ai": [
+      "work from another vendor pasted for review"
+     ],
+     "chatgpt": [
+      "work from another vendor pasted for review"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A reviewer from the same vendor (that is independent-reviewer-agent).",
+     "Using two assistants for unrelated tasks (that is multi-assistant-routing)."
+    ],
+    "probes": [
+     "Was work produced with one vendor's model reviewed by another vendor's model at the user's request?",
+     "Were the findings brought back to the work, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Models from different companies make different mistakes and catch each other's.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "implementation-blind-reviewer",
+   "version": 2,
+   "capability": "review-with-other-agents",
+   "tier": 4,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Bar reviewer agents from reading the code",
+   "tagline": "Bar the reviewer from the code; it judges what the app does.",
+   "cover_line": "Reviews against the spec, blind.",
+   "adds_over_previous": "The reviewer gets only the spec and the observable behaviour and is barred from reading the implementation, so it judges outcomes rather than code.",
+   "variants": [
+    "brief forbids opening source files",
+    "reviewer tool scope excludes the source tree"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "config"
+    ],
+    "present_if": "At the user's request or through a skill the user wrote, a reviewer agent's brief forbids reading the implementation (or its tool scope excludes the source) and gives it the spec or requirements, and it judges the work from the spec and observable behaviour, on at least 1 occasion in the window.",
+    "signals": {
+     "claude-code": [
+      "reviewer brief 'do not read the code', or restricted tools, plus spec"
+     ],
+     "codex": [
+      "codex reviewer without access to source, given spec"
+     ],
+     "cursor": [
+      "reviewer without source access"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A reviewer that reads the diff or code (that is independent-reviewer-agent).",
+     "A reviewer told to focus on behaviour but still allowed to read code."
+    ],
+    "probes": [
+     "Was the reviewer barred from reading the implementation by its brief or tool scope?",
+     "Did it judge from the spec and observable behaviour, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A reviewer who cannot see the code cannot be talked into accepting it.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "ab-with-control",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Test your change before and after",
+   "tagline": "Run the same 3+ tasks with and without it; compare each.",
+   "cover_line": "Tests changes against a control.",
+   "adds_over_previous": "The same set of tasks is run with and without one change (prompt, tool, model, instruction) and the outcomes are compared, instead of judging the change on fresh examples.",
+   "variants": [
+    "prompt version A against version B on a fixed task set",
+    "agent with and without a tool or skill on the same tasks"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "In the window, the user (or an agent at the user's request) runs the same set of at least 3 tasks under two conditions differing in one factor (with and without a prompt change, tool, model or instruction) and produces a side-by-side comparison of the outcomes per task.",
+    "signals": {
+     "claude-code": [
+      "eval runs of the same task set under two conditions with a per-task comparison"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same inputs run on two prompt versions, compared in a table"
+     ],
+     "chatgpt": [
+      "same inputs run on two prompt versions, compared in a table"
+     ],
+     "config": [
+      "eval result files with two arms over the same cases"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Trying a new prompt only on new examples.",
+     "Unit tests of the user's code with a mocked model.",
+     "Scoring a single document against a rubric (that is rubric-critique-loop).",
+     "Fewer than 3 tasks, or conditions differing in more than one factor."
+    ],
+    "probes": [
+     "Was the same set of at least 3 tasks run under two conditions differing in one factor?",
+     "Was a per-task side-by-side comparison produced?",
+     "Did it happen in the window, caused by the user?"
+    ]
+   },
+   "teach": {
+    "why": "Without a control you cannot tell a real gain from a lucky example.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "baselines-and-ablations",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 2,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Measure each tool or rule's effect",
+   "tagline": "From a bare version, add or drop one tool or rule per run.",
+   "cover_line": "Knows which parts earn a place.",
+   "adds_over_previous": "The design is compared against named baselines and with individual components switched off one at a time, to attribute the effect to each part.",
+   "variants": [
+    "no-instructions baseline plus rule-by-rule ablation",
+    "simple-method baseline plus component ablation"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "A user-caused evaluation includes a named baseline condition AND at least 2 further conditions that each differ from another condition by exactly one component (removed, or added in an incremental ladder such as v0, v0+A, v0+A+B), with results reported per condition, in the window. Component isolation across 3 or more conditions is what separates it from ab-with-control.",
+    "signals": {
+     "claude-code": [
+      "eval arms named baseline/v0 plus single-component variants, results per arm"
+     ],
+     "codex": [
+      "same arms run via codex"
+     ],
+     "cursor": [
+      "same arms run via cursor"
+     ],
+     "config": [
+      "eval configs or ledgers listing baseline and one-change arms"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single with-and-without comparison (that is ab-with-control).",
+     "Every non-baseline arm changes several components at once."
+    ],
+    "probes": [
+     "Did a user-caused eval include a named baseline condition?",
+     "Did it include at least 2 more conditions each differing from another by exactly one component?",
+     "Were results reported per condition, in the window?"
+    ]
+   },
+   "teach": {
+    "why": "You learn which parts earn their place and which are dead weight.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "hypothesis-labelled-variants",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 3,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Keep an experiment log with scores",
+   "tagline": "One row per change: what, eval score, kept or reverted.",
+   "cover_line": "Logs every change as a hypothesis.",
+   "adds_over_previous": "Each change is recorded as a named hypothesis in an iteration ledger and kept or reverted according to its measured score.",
+   "variants": [
+    "iteration ledger file",
+    "experiment tracker table"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact"
+    ],
+    "present_if": "A ledger exists with at least 3 entries, each naming a hypothesis or change, its measured score result and a keep or revert decision; at least 1 entry was added in the window, with the corresponding eval run visible.",
+    "signals": {
+     "claude-code": [
+      "ledger file appended after eval runs with keep or revert"
+     ],
+     "codex": [
+      "same ledger updated in codex sessions"
+     ],
+     "cursor": [
+      "same ledger updated in cursor sessions"
+     ],
+     "config": [
+      "ITERATIONS or ledger file with hypothesis, score, decision columns"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A changelog without scores.",
+     "Comparisons without keep or revert decisions (that is ab-with-control)."
+    ],
+    "probes": [
+     "Is there a ledger with at least 3 hypothesis entries, each with a score and a keep or revert decision?",
+     "Was at least 1 entry added in the window with its eval run visible?"
+    ]
+   },
+   "teach": {
+    "why": "You stop retrying ideas that already failed and know why things are as they are.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "noise-floor-and-significance",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 4,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Check a gain isn't just luck",
+   "tagline": "Run the unchanged version 3+ times, or use a paired test.",
+   "cover_line": "Separates real gains from noise.",
+   "adds_over_previous": "The run-to-run variation of the unchanged system is measured, or a paired statistical test is applied, before an improvement is accepted.",
+   "variants": [
+    "repeated runs of the unchanged condition",
+    "paired test or confidence interval across scenarios"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "In the window, a user-caused eval includes either at least 3 repeated runs of the same unchanged condition used to compute run-to-run spread, or a paired statistical test or confidence interval, AND the accept or reject decision refers to it.",
+    "signals": {
+     "claude-code": [
+      "repeated runs of the unchanged arm, sign tests or confidence intervals cited in decisions"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "eval reports with spread, p-values or intervals"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single run per condition.",
+     "Repeated runs averaged without using their spread."
+    ],
+    "probes": [
+     "Did the eval measure run-to-run spread with at least 3 repeats of an unchanged condition, or use a paired test or interval?",
+     "Did the accept or reject decision refer to it, in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Many apparent AI gains are noise; this tells you which.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "multi-host-model-arms",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 5,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Run evals across models or apps",
+   "tagline": "Same scenarios on 3+ models, agent apps or versions.",
+   "cover_line": "Tests across every model and host.",
+   "adds_over_previous": "The same eval set is run as separate arms across several hosts, vendors, models or versions to find where behaviour differs.",
+   "variants": [
+    "model and vendor arms",
+    "host probes (same scenario in different agent hosts)",
+    "version arms before and after an upgrade"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "In the window, a user-caused eval runs the same scenarios across at least 3 arms that differ by host, vendor, model or version, with results reported per arm.",
+    "signals": {
+     "claude-code": [
+      "same scenarios run through several agent CLIs or models, results per arm"
+     ],
+     "codex": [
+      "codex used as one arm of a multi-arm eval"
+     ],
+     "cursor": [
+      "cursor used as one arm"
+     ],
+     "config": [
+      "eval results keyed by host, vendor, model or version"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Only 2 arms (that is ab-with-control).",
+     "Using different models for different tasks (that is multi-assistant-routing)."
+    ],
+    "probes": [
+     "Did the eval run the same scenarios across at least 3 host, vendor, model or version arms?",
+     "Were results reported per arm, in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Your system will meet many models; find the weak ones before users do.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "hidden-holdout",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 6,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Hide some evals from coding agents",
+   "tagline": "Store them where they can't read; score them separately.",
+   "cover_line": "Keeps a test set agents never see.",
+   "adds_over_previous": "Some eval scenarios are stored where the agent building the system cannot read them, so it cannot overfit to them.",
+   "variants": [
+    "holdout folder denied in the building agent's settings",
+    "frozen blind benchmark held by a separate runner"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "config",
+     "artifact"
+    ],
+    "present_if": "An eval set exists that is stored outside the building agent's readable scope (a separate location denied by configuration, encrypted, or held by a separate runner), it was run against the system in the window, and its scores are reported separately from the visible scenarios.",
+    "signals": {
+     "claude-code": [
+      "deny rules preventing reads of a holdout path",
+      "separate runner session scoring holdout"
+     ],
+     "codex": [
+      "holdout outside codex sandbox scope"
+     ],
+     "cursor": [
+      "holdout excluded from the workspace"
+     ],
+     "config": [
+      "permissions.deny on the holdout path",
+      "encrypted or separate holdout store",
+      "holdout scores reported separately"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A test set the building agent can read, even if told not to.",
+     "A frozen benchmark stored inside the repository the agent works in."
+    ],
+    "probes": [
+     "Is there an eval set the building agent cannot read, enforced by configuration, encryption or a separate runner?",
+     "Was it run in the window with scores reported separately?"
+    ]
+   },
+   "teach": {
+    "why": "An agent that can see the test passes the test, not the problem.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "outcome-gated-merge",
+   "version": 2,
+   "capability": "run-ai-experiments",
+   "tier": 7,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Block merges until user flows pass",
+   "tagline": "A required CI check runs real agents through the flow.",
+   "cover_line": "Merges only what works end to end.",
+   "adds_over_previous": "Merging is blocked unless a named user outcome passes end to end with real agents, rather than on unit tests or scores alone.",
+   "variants": [
+    "required CI check running an end-to-end agent scenario",
+    "pre-merge script enforced by a hook"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "config",
+     "artifact"
+    ],
+    "present_if": "A merge gate set up by the user (required CI check, or a rule enforced by a hook or script) runs an end-to-end scenario with real agents for a named user outcome, AND in the window at least 1 merge was allowed or blocked by it.",
+    "signals": {
+     "claude-code": [
+      "required check running a real-agent scenario blocks or passes a merge"
+     ],
+     "codex": [
+      "same gate invoking codex"
+     ],
+     "cursor": [
+      "same gate invoking cursor-agent"
+     ],
+     "config": [
+      "CI workflow defining an outcome gate as required"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Unit-test CI gates only.",
+     "An eval run by hand, with merging regardless of its result."
+    ],
+    "probes": [
+     "Is there a user-set merge gate running an end-to-end real-agent scenario for a named user outcome?",
+     "Did it allow or block at least 1 merge in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Nothing ships that breaks what users come for.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "persona-scenario-evals",
+   "version": 2,
+   "capability": "build-eval-scenarios",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Test your AI with persona scenarios",
+   "tagline": "3+ scenarios, each a persona with the reply you expect.",
+   "cover_line": "Tests AI against realistic personas.",
+   "adds_over_previous": "The eval set consists of synthesized sessions from defined personas, each paired with an expected-behaviour spec.",
+   "variants": [
+    "persona scenarios with expected behaviour",
+    "negative controls that must not trigger the behaviour"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "An eval set exists with at least 3 scenarios, each tied to a defined persona and an expected-behaviour spec, and in the window it was run, created or edited against an AI system or prompt that the user builds or configures.",
+    "signals": {
+     "claude-code": [
+      "scenario files with persona and expected behaviour; harness runs"
+     ],
+     "codex": [
+      "same scenarios run through codex"
+     ],
+     "cursor": [
+      "same scenarios run through cursor"
+     ],
+     "claude-ai": [
+      "persona scenarios run by hand in chats with pass or fail"
+     ],
+     "chatgpt": [
+      "persona scenarios run by hand in chats with pass or fail"
+     ],
+     "config": [
+      "evals folder with persona scenarios and expectations"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A few ad-hoc test prompts without expected behaviour (that is ab-with-control).",
+     "Personas used for marketing or copy only.",
+     "A model playing the user live (that is llm-simulated-user)."
+    ],
+    "probes": [
+     "Is there an eval set of at least 3 persona scenarios with expected behaviour?",
+     "In the window, was it run, created or edited against an AI system or prompt the user builds or configures?"
+    ]
+   },
+   "teach": {
+    "why": "You know how your assistant behaves for each kind of user before they meet it.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "llm-simulated-user",
+   "version": 2,
+   "capability": "build-eval-scenarios",
+   "tier": 2,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Simulate users chatting with your AI agent",
+   "tagline": "A script has a model chat, turn by turn, with your agent.",
+   "cover_line": "Has a model role-play the other side.",
+   "adds_over_previous": "A model plays the user live in a multi-turn conversation with the agent under test, instead of fixed scripted inputs.",
+   "variants": [
+    "simulator script pairing a user model with the agent under test",
+    "simulated user as a subagent"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "In the window, a harness the user built (or had an agent build) runs at least 1 multi-turn conversation in which one model generates user turns that respond to the agent under test, and transcripts or results are produced.",
+    "signals": {
+     "claude-code": [
+      "harness where a model writes user turns against the agent under test",
+      "simulated-user subagent"
+     ],
+     "codex": [
+      "codex used as agent under test or as simulator"
+     ],
+     "cursor": [
+      "simulator script run"
+     ],
+     "config": [
+      "simulator scripts and saved simulated transcripts"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Fixed single-turn test inputs (that is persona-scenario-evals).",
+     "Role-play for the user's own practice (interview rehearsal) rather than testing an agent."
+    ],
+    "probes": [
+     "Is there a user-caused harness where a model generates the user's turns against an agent under test?",
+     "Did it run a multi-turn conversation and produce transcripts or results in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Real users reply, push back and wander; scripted inputs do not.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "synthetic-persona-panel",
+   "version": 2,
+   "capability": "build-eval-scenarios",
+   "tier": 3,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Have AI personas rate your page",
+   "tagline": "3+ persona agents score a page or flow; you combine scores.",
+   "cover_line": "Asks a panel of synthetic personas.",
+   "adds_over_previous": "A panel of persona agents each rates the same copy or user journey and returns structured output that is aggregated, as a stand-in for a round of user research.",
+   "variants": [
+    "persona subagents returning a fixed schema",
+    "scripted panel run across many personas"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "At the user's request, at least 3 distinct persona agents or runs evaluate the same copy or journey, each returning ratings in fixed fields, and the ratings are aggregated into one result, on at least 1 occasion in the window.",
+    "signals": {
+     "claude-code": [
+      "persona Agent calls returning a fixed schema, then an aggregate table"
+     ],
+     "codex": [
+      "persona runs via codex"
+     ],
+     "cursor": [
+      "persona runs via cursor"
+     ],
+     "claude-ai": [
+      "persona panel simulated in a chat with a fixed rating table"
+     ],
+     "chatgpt": [
+      "persona panel simulated in a chat with a fixed rating table"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Asking one assistant 'what would a buyer think'.",
+     "Personas used to test an agent's behaviour (that is persona-scenario-evals).",
+     "Free-text opinions without fixed fields."
+    ],
+    "probes": [
+     "Did at least 3 distinct persona agents or runs evaluate the same copy or journey?",
+     "Did each return ratings in fixed fields that were aggregated, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A first round of audience reactions in minutes, before paying for research.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "simulated-world-twins",
+   "version": 2,
+   "capability": "build-eval-scenarios",
+   "tier": 4,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Test your agent against fake sites",
+   "tagline": "Build a fake website, clock, login or API for it to use.",
+   "cover_line": "Tests agents in a simulated world.",
+   "adds_over_previous": "The agent under test runs against simulated stand-ins of its external dependencies (fake web, clock, identity providers, APIs), so scenarios are reproducible and safe.",
+   "variants": [
+    "local fake website the agent must use",
+    "controllable fake clock",
+    "fake identity provider or API with scripted responses"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "In the window, an eval or test harness the user built runs an AI agent against at least 1 simulated external dependency built for that purpose (fake website, fake clock, fake identity provider, scripted stub service), and the runs complete.",
+    "signals": {
+     "claude-code": [
+      "agent runs against a fake site, fake clock, fake identity provider or stub service"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "twin or fake-service code used by an agent test harness"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Unit-test mocks of the model client.",
+     "Runs against real external services."
+    ],
+    "probes": [
+     "Does a user-built harness run an AI agent against at least 1 simulated external dependency?",
+     "Did those runs complete in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Agents meet risky or rare situations without touching the real world.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "blind-human-pairwise",
+   "version": 2,
+   "capability": "judge-eval-results",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Pick blind between two outputs",
+   "tagline": "Have AI shuffle them; pick, then see which was which.",
+   "cover_line": "Judges outputs blind.",
+   "adds_over_previous": "A human judges pairs of outputs with the source condition hidden, so the preference is not biased by knowing which version produced which.",
+   "variants": [
+    "randomised A/B pairs shown by a script",
+    "AI presents shuffled pairs and reveals after"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "The user judges between at least 2 outputs whose source condition (model, prompt version, agent, design arm) is hidden or randomised by a script or by the AI at the user's request, and the user's choice is recorded against the hidden condition, on at least 1 occasion in the window. Hiding the source from the human judge is what separates it from ask-for-options and ab-with-control.",
+    "signals": {
+     "claude-code": [
+      "outputs shown as A/B or anonymised labels, user picks, mapping revealed"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "blinded pairs presented in a chat"
+     ],
+     "chatgpt": [
+      "blinded pairs presented in a chat"
+     ],
+     "config": [
+      "blind comparison page or script with a hidden mapping"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Comparing outputs whose versions are labelled (that is ab-with-control).",
+     "A judge model picks (that is deterministic-plus-cited-judge).",
+     "Choosing among options from one generation where no source condition is hidden (that is ask-for-options)."
+    ],
+    "probes": [
+     "Did the user judge between outputs whose source condition was hidden or randomised?",
+     "Was the choice recorded against the hidden condition, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Knowing which version is 'new' biases you; blinding removes it.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "deterministic-plus-cited-judge",
+   "version": 2,
+   "capability": "judge-eval-results",
+   "tier": 2,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Pair code checks with evidence-citing LLM judges",
+   "tagline": "Scripts decide what they can; the judge must quote evidence.",
+   "cover_line": "Makes AI judges cite evidence.",
+   "adds_over_previous": "Deterministic checks decide what can be decided mechanically, and an LLM judge decides the rest only with citations to transcript evidence.",
+   "variants": [
+    "programmatic transcript checks plus evidence-quoting judge",
+    "judge output schema with a required evidence field"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "transcript"
+    ],
+    "present_if": "The user's evaluation work in the window includes both (a) deterministic programmatic checks over transcripts or outputs and (b) an LLM judge whose required output includes quoted or referenced evidence for each verdict, whether in one pipeline or in separate pipelines over the same eval; at least one of them ran in the window.",
+    "signals": {
+     "claude-code": [
+      "grader scripts plus judge prompts with an evidence or quote field"
+     ],
+     "codex": [
+      "judge runs via codex with cited evidence"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "grader code and judge prompt or schema requiring evidence"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "An LLM judge without an evidence requirement.",
+     "Only deterministic checks.",
+     "Human picks (that is blind-human-pairwise)."
+    ],
+    "probes": [
+     "Does the user's evaluation work include deterministic programmatic checks?",
+     "Does it include an LLM judge that must cite evidence for each verdict?",
+     "Did at least one of them run in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Judges that must quote evidence cannot invent verdicts; code checks cost nothing.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "user-session-as-bug-report",
+   "version": 3,
+   "capability": "learn-from-real-usage",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Have AI diagnose your app's failed chats",
+   "tagline": "Give the agent a real chat or trace; it finds the bad turn.",
+   "cover_line": "Debugs from real session transcripts.",
+   "adds_over_previous": "An end user's actual session transcript with the user's AI product is used as the bug report for debugging, instead of a description of the problem.",
+   "variants": [
+    "exported conversation of an end user",
+    "production trace of an agent run"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "The person gives an agent a real end-user session transcript or trace from an AI product or agent the person builds or operates (not their own sessions with someone else's tool), asks it to diagnose a failure, and the diagnosis cites specific turns or steps, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "end-user transcript or trace file read, diagnosis citing turns"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "end-user transcript pasted for diagnosis"
+     ],
+     "chatgpt": [
+      "end-user transcript pasted for diagnosis"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The user's own sessions mined for personal preferences (that is instructions-mined-from-own-history).",
+     "A bug described in prose only.",
+     "Synthetic transcripts (that is persona-scenario-evals)."
+    ],
+    "probes": [
+     "Did the user give an agent a real end-user transcript or trace from an AI product they build or operate?",
+     "Did the diagnosis cite specific turns or steps, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "The real conversation shows exactly where your AI went wrong.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "replay-real-failure",
+   "version": 2,
+   "capability": "learn-from-real-usage",
+   "tier": 2,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Rerun failed user chats after a fix",
+   "tagline": "Feed the recorded turns to the fixed app; compare outcomes.",
+   "cover_line": "Replays real failures on the fix.",
+   "adds_over_previous": "The recorded real failed session is replayed against the fixed system to prove the fix, rather than relying on a new synthetic test.",
+   "variants": [
+    "replay script feeding recorded user turns",
+    "recorded trace re-executed against the new version"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "After a fix, the agent (at the user's request) replays the inputs of a recorded real failed session against the changed system and reports the outcome compared with the original failure, on at least 1 occasion in the window.",
+    "signals": {
+     "claude-code": [
+      "replay script or forked session feeding recorded user turns to the fixed system"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "replay fixtures built from real sessions"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Diagnosis only, without replay (that is user-session-as-bug-report).",
+     "A fresh synthetic test written for the fix."
+    ],
+    "probes": [
+     "After a fix, were the inputs of a recorded real failed session replayed against the changed system?",
+     "Was the outcome compared with the original failure, at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Proof that the exact failure a user hit is gone.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "incident-to-frequency-eval",
+   "version": 2,
+   "capability": "learn-from-real-usage",
+   "tier": 3,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Measure how often a failure repeats",
+   "tagline": "Run the bad case 3+ times per version; report the rate.",
+   "cover_line": "Measures how often failures recur.",
+   "adds_over_previous": "A single observed misbehaviour is turned into a scenario run many times to measure how often it occurs, before and after a fix.",
+   "variants": [
+    "incident scenario run N times per condition",
+    "failure-rate dashboard per incident"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "The user (or an agent at the user's request) turns an observed incident into a scenario and runs it at least 3 times per condition, reporting a failure rate, in the window.",
+    "signals": {
+     "claude-code": [
+      "incident scenario run N times with a rate"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same scenario rerun in chats with a tally"
+     ],
+     "chatgpt": [
+      "same scenario rerun in chats with a tally"
+     ],
+     "config": [
+      "scenario file derived from an incident plus a rate report"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single replay (that is replay-real-failure).",
+     "Runs repeated without a pass or fail rule."
+    ],
+    "probes": [
+     "Was a scenario created from an observed incident?",
+     "Was it run at least 3 times per condition with a failure rate reported, in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A one-off bug might be a 1-in-3 bug; the rate tells you.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "intent-telemetry-loop",
+   "version": 3,
+   "capability": "learn-from-real-usage",
+   "tier": 4,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Require a reason field on your MCP",
+   "tagline": "Each tool call must say why; you read the log.",
+   "cover_line": "Learns why agents call each tool.",
+   "adds_over_previous": "The user's tools require calling agents to state their intent with each call, the intents are logged, and a recurring review of the log drives changes to the tool texts.",
+   "variants": [
+    "intent parameter on MCP tools",
+    "reason field logged by an API used by agents"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "config"
+    ],
+    "present_if": "A tool or MCP server whose source the person wrote (or had an agent write) in a repository they maintain requires or records, with each call, the calling agent's intent (a reason, purpose or triggering-request field), and the log kept by that code contains calls from the window. Filling in an intent or reason field when calling someone else's tool is never this practice: it credits that tool. Reviews of that log and changes to tool texts based on it are supporting signals, not requirements. The per-call intent field is what separates it from ordinary request logging.",
+    "signals": {
+     "claude-code": [
+      "own MCP tool schemas with an intent or reason parameter",
+      "sessions reading the intent log"
+     ],
+     "codex": [
+      "codex calls to the same tools carrying intent"
+     ],
+     "cursor": [
+      "cursor calls carrying intent"
+     ],
+     "config": [
+      "tool schema with an intent field",
+      "telemetry rows with intent text in window"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Ordinary request logs without intent."
+    ],
+    "probes": [
+     "Does a tool the user owns record the calling agent's intent with each call?",
+     "Does the log contain calls from the window?"
+    ]
+   },
+   "teach": {
+    "why": "You see what agents were trying to do, not just what they called.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "red-team-agent-swarm",
+   "version": 2,
+   "capability": "attack-your-own-ai",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Red-team your AI with 3+ attacker agents",
+   "tagline": "3+ attacker agents, each with one goal; report per goal.",
+   "cover_line": "Red-teams the AI before attackers do.",
+   "adds_over_previous": "Many attacker agents, each with one distinct attack goal, are run against an AI system the user owns or builds.",
+   "variants": [
+    "parallel attacker subagents",
+    "scripted attacker runs, one goal per run"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "In the window, at the user's request, at least 3 attacker agents or runs, each assigned a distinct attack goal, are run against an AI system or agent the user owns or builds, with results reported per goal.",
+    "signals": {
+     "claude-code": [
+      "attacker runs (claude -p or subagents) each with one goal against the user's system"
+     ],
+     "codex": [
+      "codex attacker runs"
+     ],
+     "cursor": [
+      "attacker agents"
+     ],
+     "config": [
+      "red-team scripts and per-goal results"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single manual jailbreak attempt.",
+     "Attacks on systems the user does not own.",
+     "A security review of code (that is multi-lens-reviewers)."
+    ],
+    "probes": [
+     "Were at least 3 attacker agents or runs with distinct goals run against an AI system the user owns or builds?",
+     "Were results reported per goal, in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Someone will attack your AI; better that it is you, first.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "white-box-attacker-brief",
+   "version": 2,
+   "capability": "attack-your-own-ai",
+   "tier": 2,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Give attacker agents your guardrails",
+   "tagline": "Put your system prompt and filters in each attacker's brief.",
+   "cover_line": "Arms attackers with the full spec.",
+   "adds_over_previous": "Attacker agents receive the full specification of the system's defences in their brief, so they attack the known defences directly.",
+   "variants": [
+    "defence spec pasted into each attacker brief",
+    "attackers given read access to the guard code"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "In the window, attacker agents run against the user's AI system have briefs (written by the user or at the user's request) that include the system's defence specification (guard rules, filters, system prompt or guard code).",
+    "signals": {
+     "claude-code": [
+      "attacker briefs containing the defence spec"
+     ],
+     "codex": [
+      "same in codex runs"
+     ],
+     "cursor": [
+      "same in cursor runs"
+     ],
+     "config": [
+      "attacker brief files including defence rules"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Attackers given only the public behaviour (that is red-team-agent-swarm)."
+    ],
+    "probes": [
+     "Were attacker agents run against the user's AI system in the window?",
+     "Did their briefs include the defence specification?"
+    ]
+   },
+   "teach": {
+    "why": "Defences that only hold while secret will not hold.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "harden-and-rerun",
+   "version": 2,
+   "capability": "attack-your-own-ai",
+   "tier": 3,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 5,
+   "name": "Rerun attacks after telling attackers your fix",
+   "tagline": "Patch, tell attackers what changed, rerun the same goals.",
+   "cover_line": "Patches, then attacks again.",
+   "adds_over_previous": "After a red-team round, defences are patched, the attacker briefs are updated with the new defences, and the same attack goals are rerun to confirm.",
+   "variants": [
+    "repeated rounds until all goals fail",
+    "attack suite kept as a regression gate"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "In the window, after a red-team round against the user's AI system, defences are changed, the attacker briefs are updated to include the new defences, and the same attack goals are rerun with results compared across rounds.",
+    "signals": {
+     "claude-code": [
+      "round 2 of the same attack goals after defence changes"
+     ],
+     "codex": [
+      "same in codex runs"
+     ],
+     "cursor": [
+      "same in cursor runs"
+     ],
+     "config": [
+      "per-round red-team results"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Patching without rerunning the attacks.",
+     "Rerunning with unchanged attacker briefs."
+    ],
+    "probes": [
+     "After a red-team round, were defences changed?",
+     "Were attacker briefs updated with the new defences and the same goals rerun?",
+     "Were results compared across rounds, in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A fix is proven only when an attacker who knows about it still fails.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "output-format-rules",
+   "version": 3,
+   "capability": "set-reply-contract",
+   "tier": 1,
+   "baseline": false,
+   "family": "context",
+   "sophistication": 3,
+   "name": "Set how AI replies should look",
+   "tagline": "Save 3+ rules like 'answer first' and 'under 100 words'.",
+   "cover_line": "Sets the shape of every reply.",
+   "adds_over_previous": "Standing, checkable rules govern the form of every reply (ordering, length budget, recommend instead of listing menus, vocabulary), stored where they apply to all replies.",
+   "variants": [
+    "reply rules in account custom instructions",
+    "reply rules in a user-level or project instruction file",
+    "reply rules in a skill loaded every session"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "config",
+     "transcript"
+    ],
+    "present_if": "A standing instruction set the person wrote (account, user-level, project or their own skill; an installed output style or plugin's rules do not count) contains at least 3 rules about the form of replies that can each be checked by reading a reply (position of the verdict, a word or line budget, number of options, banned words or phrases, required sections), AND it was active in at least 1 session in the window or edited in the window.",
+    "signals": {
+     "claude-code": [
+      "CLAUDE.md or skill reply rules loaded"
+     ],
+     "codex": [
+      "AGENTS.md reply rules loaded"
+     ],
+     "cursor": [
+      "rules file reply rules"
+     ],
+     "claude-ai": [
+      "profile preferences with checkable reply rules"
+     ],
+     "chatgpt": [
+      "custom instructions with checkable reply rules"
+     ],
+     "config": [
+      "instruction text with verdict-first, word budgets, banned phrases"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Only vague style preferences such as 'be concise' or 'friendly tone' (that is personal-instructions).",
+     "Format requests made inside a single prompt."
+    ],
+    "probes": [
+     "Does a user-written standing instruction set contain at least 3 checkable rules about reply form?",
+     "Was it active or edited in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Every answer arrives in the shape you can use fastest.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "hook-enforced-reply-rules",
+   "version": 3,
+   "capability": "set-reply-contract",
+   "tier": 2,
+   "baseline": false,
+   "family": "context",
+   "sophistication": 5,
+   "name": "Auto-reject agent replies breaking your rules",
+   "tagline": "A stop hook checks each reply; a broken rule forces a redo.",
+   "cover_line": "Enforces reply rules automatically.",
+   "adds_over_previous": "A hook checks each reply against the rules and rejects it, forcing a rewrite, when a rule is broken.",
+   "variants": [
+    "stop hook running a reply checker script",
+    "hook calling a small model to check the reply against the rules"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "config",
+     "transcript"
+    ],
+    "present_if": "A stop or reply hook that the person configured themselves checks the agent's replies against rules the person stated and blocks or forces a rewrite on violation, AND it blocked at least 1 reply in the window (visible block message or log).",
+    "signals": {
+     "claude-code": [
+      "Stop hook block messages citing a reply rule"
+     ],
+     "codex": [
+      "reply-check hook output"
+     ],
+     "cursor": [
+      "stop hook output"
+     ],
+     "config": [
+      "Stop hook script checking replies; hook log entries in window"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Rules only written in instructions (that is output-format-rules).",
+     "Hooks that format or lint code.",
+     "A hook that checks an external done-state (that is hook-enforced-done-gate)."
+    ],
+    "probes": [
+     "Is there a user-configured hook that checks replies against rules and blocks on violation?",
+     "Did it block at least 1 reply in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Rules the agent tends to forget become rules it cannot break.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "hook-enforced-done-gate",
+   "version": 3,
+   "capability": "set-reply-contract",
+   "tier": 3,
+   "baseline": false,
+   "family": "context",
+   "sophistication": 5,
+   "name": "Auto-block agents from stopping until checks pass",
+   "tagline": "A stop hook runs tests; the agent can't end while one fails.",
+   "cover_line": "Lets no agent stop before done.",
+   "adds_over_previous": "A hook refuses the agent's attempt to finish until a checkable done-state holds in the real world (tests green, pull request mergeable, deploy healthy).",
+   "variants": [
+    "stop hook running the test suite",
+    "stop hook checking pull-request mergeability or CI status",
+    "stop hook checking a health endpoint after deploy"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "config",
+     "transcript"
+    ],
+    "present_if": "A stop (or equivalent end-of-turn) hook that the person configured themselves runs a command that checks a done-state the person defined (their tests, build or checklist) and blocks the agent from ending while it fails, AND it blocked at least 1 attempt to finish in the window. A stop hook shipped by an installed plugin that blocks on its own condition does not count.",
+    "signals": {
+     "claude-code": [
+      "Stop hook block messages citing failing tests, PR state or health"
+     ],
+     "codex": [
+      "done-gate hook output"
+     ],
+     "cursor": [
+      "stop hook output"
+     ],
+     "config": [
+      "Stop hook running a state-check command; hook log entries in window"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A hook checking reply style (that is hook-enforced-reply-rules).",
+     "The agent reporting its own completeness (that is honesty-self-audit).",
+     "Required CI checks on pull requests with no agent hook."
+    ],
+    "probes": [
+     "Is there a user-configured end-of-turn hook that checks an external done-state?",
+     "Did it block at least 1 attempt to finish in the window?"
+    ]
+   },
+   "teach": {
+    "why": "'Done' means the checks pass, not that the agent believes it is done.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "hooks-aware-of-headless",
+   "version": 3,
+   "capability": "set-reply-contract",
+   "tier": 4,
+   "baseline": false,
+   "family": "context",
+   "sophistication": 4,
+   "name": "Make your hooks skip scripted agent runs",
+   "tagline": "A hook checks if a script started it, and skips or adapts.",
+   "cover_line": "Keeps guardrails script-aware.",
+   "adds_over_previous": "The enforcement hooks detect non-interactive, scripted runs and skip or adapt, so interactive guardrails do not break headless automation.",
+   "variants": [
+    "environment variable set by scripts and checked by hooks",
+    "terminal or session-type check at the top of each hook"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "config",
+     "transcript"
+    ],
+    "present_if": "At least 1 hook that the person wrote or configured themselves (not one shipped by an installed plugin) contains a check for headless or non-interactive mode (environment variable, flag, terminal check) that changes its behaviour, AND the hook fired in the window. The headless branch is what separates it from other hooks.",
+    "signals": {
+     "claude-code": [
+      "hook fired in interactive sessions and skipped in claude -p runs"
+     ],
+     "codex": [
+      "hook branch for codex exec"
+     ],
+     "cursor": [
+      "hook branch for CLI runs"
+     ],
+     "config": [
+      "hook scripts testing an env var, flag or TTY"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Hooks without any headless branch.",
+     "Hooks switched off globally by a launch flag, with no detection logic inside the hook."
+    ],
+    "probes": [
+     "Does a user-configured hook detect headless or non-interactive mode and change behaviour?",
+     "Did it fire in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Your scripts and your own sessions share one setup without fighting.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "meta-thinking-prompt",
+   "version": 2,
+   "capability": "examine-model-reasoning",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Ask the AI what it's assuming",
+   "tagline": "Before it answers: 'What are you assuming? What's missing?'",
+   "cover_line": "Makes the AI think about its thinking.",
+   "adds_over_previous": "Before the answer, the model is asked to reason about how to approach the problem (its assumptions, what an excellent answer needs, what information is missing).",
+   "variants": [
+    "'before answering, list your assumptions'",
+    "'first say what a great answer would need, then answer'"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user's prompt asks the model to think about its own thinking or approach (for example 'metathink', 'think about how you would approach this', 'what are you assuming', 'what would an excellent answer need', 'what are you missing'), before or alongside the answer. Whether the model complies is not part of the test.",
+    "signals": {
+     "claude-code": [
+      "user prompts with 'metathink', 'think about your approach', 'what are you assuming'"
+     ],
+     "codex": [
+      "same in codex prompts"
+     ],
+     "cursor": [
+      "same in cursor prompts"
+     ],
+     "claude-ai": [
+      "same in chats"
+     ],
+     "chatgpt": [
+      "same in chats"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The host's built-in extended thinking or reasoning toggle.",
+     "A plan for actions to be approved (that is plan-before-execute).",
+     "Asking why after the answer (that is interrogate-the-model)."
+    ],
+    "probes": [
+     "Did the user ask the model to reflect on its approach, assumptions, quality bar or missing information?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "The AI catches its own wrong assumptions before they shape the answer.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "interrogate-the-model",
+   "version": 2,
+   "capability": "examine-model-reasoning",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Find what misled AI by asking why",
+   "tagline": "After it acts: 'Why X over Y? What did you think I meant?'",
+   "cover_line": "Cross-examines the model's choices.",
+   "adds_over_previous": "After an output or action, the user cross-examines the model about why it made specific choices, what it believed and what would have changed its mind, and uses the answers to diagnose its reasoning.",
+   "variants": [
+    "'why did you choose X over Y'",
+    "'what did you think I meant by ...'",
+    "'what would have made you do it differently'"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, after an AI output or action, the user asks at least 2 diagnostic questions about the model's reasons, beliefs or rejected alternatives for a specific choice ('why did you', 'what did you think I meant', 'what would have made you').",
+    "signals": {
+     "claude-code": [
+      "'why did you ...', 'what made you ...' follow-ups about a specific action"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "same in chats"
+     ],
+     "chatgpt": [
+      "same in chats"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single 'why?'.",
+     "Requests for evidence that a claim is true (that is proof-not-claims).",
+     "Questions about AI in general."
+    ],
+    "probes": [
+     "After an output or action, did the user ask at least 2 diagnostic questions about a specific choice?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Its answer shows which instruction misled it, so you can fix that one.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "design-traps-into-tasks",
+   "version": 2,
+   "capability": "examine-model-reasoning",
+   "tier": 3,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 4,
+   "name": "Plant traps to test the agent",
+   "tagline": "Hide a contradiction or wrong fact; write down the catch.",
+   "cover_line": "Plants traps to test attention.",
+   "adds_over_previous": "The user deliberately plants a known-answer trap in a task (a contradiction, a stale fact, an impossible constraint) to observe whether the agent catches it.",
+   "variants": [
+    "contradictory requirement planted in a brief",
+    "known-wrong fact planted in source material"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "The user deliberately plants a known catch (a contradiction, a stale or wrong fact, an impossible constraint, a tempting shortcut) in a task meant for an agent, or in an eval or assessment task meant to test work done with agents, and the expected catch is written down by the user or at their request (a reveal, an answer key, a test plan), on at least 1 occasion in the window.",
+    "signals": {
+     "claude-code": [
+      "task or scenario design listing planted traps and expected detections"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "trap task written in a chat with its answer key"
+     ],
+     "chatgpt": [
+      "trap task written in a chat with its answer key"
+     ],
+     "config": [
+      "scenario or assessment files with a traps or answer-key section"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "An accidental error by the user.",
+     "Red-team runs against an AI product (that is red-team-agent-swarm).",
+     "Interview or quiz questions that are merely difficult, with no planted contradiction, wrong fact, impossible constraint or tempting shortcut."
+    ],
+    "probes": [
+     "Did a task for an agent, or an eval or assessment task about agent use, contain a deliberately planted catch?",
+     "Is the expected catch written down (reveal, answer key or test plan)?",
+     "Did this happen at least once in the window?"
+    ]
+   },
+   "teach": {
+    "why": "You learn how far to trust an agent's attention before it matters.",
+    "minutes": 8
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "rehearse-with-ai-in-role",
+   "version": 1,
+   "capability": "rehearse-with-ai",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 2,
+   "name": "Role-play a hard conversation with AI",
+   "tagline": "Say 'play my manager'; answer as yourself, turn by turn.",
+   "cover_line": "Rehearses hard conversations in advance.",
+   "adds_over_previous": "The AI plays a named counterpart (customer, manager, interviewer, negotiator) in a back-and-forth so the user practises a real upcoming conversation, instead of asking for advice about it.",
+   "variants": [
+    "negotiation rehearsal",
+    "job interview practice with the AI as interviewer",
+    "difficult feedback conversation with the AI as the colleague",
+    "sales objection-handling role-play",
+    "voice-mode role-play"
+   ],
+   "surfaces": [
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 1 session in the window, the user asks the AI to play a specific counterpart in a conversation the user is preparing for, and the user then takes at least 3 turns speaking as themselves to that counterpart. A played-out practice run, rather than advice or a script, is what separates it from qa-fact-lookup.",
+    "signals": {
+     "claude-ai": [
+      "'play my manager / the customer / the interviewer' followed by a multi-turn exchange in role"
+     ],
+     "chatgpt": [
+      "same in text chats",
+      "voice-mode session used for role-play"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Asking how to handle a conversation, or for a script, without playing it out (that is qa-fact-lookup or short-form-content).",
+     "Role-play in fiction or games unrelated to a real conversation the user faces.",
+     "A model simulating users to test an AI system (that is llm-simulated-user).",
+     "Fewer than 3 user turns in role."
+    ],
+    "probes": [
+     "Did the user ask the AI to play a specific counterpart in a conversation the user is preparing for?",
+     "Did the user take at least 3 turns speaking to that counterpart?",
+     "Did this happen in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "You get the awkward first attempt out of the way where it costs nothing.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 18,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 49,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "rehearsal-with-scored-debrief",
+   "version": 1,
+   "capability": "rehearse-with-ai",
+   "tier": 2,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 3,
+   "name": "Redo a role-play after AI scores it",
+   "tagline": "Have it rate you on clarity and tone, then run it again.",
+   "cover_line": "Replays the rehearsal until the score rises.",
+   "adds_over_previous": "After a rehearsal the AI rates the user's performance against named criteria and the user reruns the conversation to improve the weak points.",
+   "variants": [
+    "debrief table with criteria and scores, then a second run",
+    "counterpart made harder on the rerun"
+   ],
+   "surfaces": [
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 1 session in the window, after a role-play rehearsal, the user asks for (or a prompt they wrote requires) a debrief rating their performance against at least 2 named criteria, AND the user then reruns at least part of the conversation. The scored debrief followed by a rerun is what separates it from rehearse-with-ai-in-role.",
+    "signals": {
+     "claude-ai": [
+      "rehearsal, then a criteria score table, then 'again from the top'"
+     ],
+     "chatgpt": [
+      "rehearsal, then a criteria score table, then a second run"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A rehearsal followed by general tips with no criteria-based rating (that is rehearse-with-ai-in-role).",
+     "A rating with no rerun.",
+     "Scoring a document against a rubric (that is rubric-critique-loop)."
+    ],
+    "probes": [
+     "After a role-play rehearsal, did the user get a rating of their performance against at least 2 named criteria, at their request?",
+     "Did the user then rerun at least part of the conversation?",
+     "Did this happen in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "A score tells you what to fix; the rerun proves you fixed it.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "prompts-as-code",
+   "version": 2,
+   "capability": "engineer-agent-facing-text",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Keep app prompts in version control",
+   "tagline": "Prompt files the app loads at runtime, changed by commits.",
+   "cover_line": "Treats prompts as code.",
+   "adds_over_previous": "The prompts and agent-facing texts of a product live in version control as files, changed through commits and tests, not edited in place in a UI or buried in code strings.",
+   "variants": [
+    "prompts folder loaded at runtime",
+    "prompt files with tests and review"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact"
+    ],
+    "present_if": "Prompts or agent-facing texts of a product the user maintains are kept in version control as dedicated prompt or text files or modules (separate from application logic) and loaded by the product at runtime, AND in the window at least 1 commit by the user (or by an agent at the user's request) changed them.",
+    "signals": {
+     "claude-code": [
+      "edits and commits to prompt or tool-text files"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "git log of prompt or text files in window"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Prompts kept in a notes document.",
+     "The user's personal instruction files (that is personal-instructions).",
+     "Prompt strings embedded inline in application code."
+    ],
+    "probes": [
+     "Are there versioned prompt or agent-facing text files loaded at runtime by a product the user maintains?",
+     "Was at least 1 commit changing them made in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Prompt changes become reviewable, revertible and testable.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "agent-facing-text-as-curriculum",
+   "version": 3,
+   "capability": "engineer-agent-facing-text",
+   "tier": 2,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Write your API's errors so agents self-correct",
+   "tagline": "In your tool or API, errors and docs say what to try next.",
+   "cover_line": "Writes tool texts that teach agents.",
+   "adds_over_previous": "Tool descriptions, error messages and responses are written to teach the calling agent the next correct step, rather than for human readers.",
+   "variants": [
+    "errors that state the valid values and the next call",
+    "tool descriptions that say when not to use the tool"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "The person (or an agent at their request) rewrites the descriptions, error messages or responses of a tool or API whose source the person maintains so that they tell the calling agent what to do next (the next step, valid values, how to recover), and the change is committed to that source, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "edits to tool descriptions or error texts adding next-step guidance"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "commits to tool text files with next-step wording"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Documentation written for human readers.",
+     "Error messages aimed at end users."
+    ],
+    "probes": [
+     "Were tool descriptions, errors or responses of a tool the user owns rewritten to instruct the calling agent?",
+     "Was the change committed, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Agents that call your tools recover on their own instead of looping.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "policy-lint-ai-texts",
+   "version": 2,
+   "capability": "engineer-agent-facing-text",
+   "tier": 3,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 4,
+   "name": "Lint your prompts with a style-guide script",
+   "tagline": "A script flags length, banned words, missing sections.",
+   "cover_line": "Lints every AI-facing text.",
+   "adds_over_previous": "An automated linter checks all agent-facing texts against a written policy and fails on violations.",
+   "variants": [
+    "lint script in CI",
+    "pre-commit check over prompt and tool-text files"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor"
+   ],
+   "detect": {
+    "evidence": [
+     "artifact",
+     "config"
+    ],
+    "present_if": "A lint script or check written by the user (or at the user's request) scans agent-facing texts against a written policy (length, required sections, banned phrases), AND it ran in the window, in CI or locally, with a visible pass or fail.",
+    "signals": {
+     "claude-code": [
+      "lint script over prompts or tool texts run with violations reported"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "config": [
+      "lint script plus written policy; CI step running it"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A written policy with no automated check.",
+     "Generic code linting."
+    ],
+    "probes": [
+     "Is there a user-caused lint check of agent-facing texts against a written policy?",
+     "Did it run in the window with a visible result?"
+    ]
+   },
+   "teach": {
+    "why": "Your standards for AI-facing text hold even when many people edit it.",
+    "minutes": 15
+   },
+   "stats": {
+    "prevalence_pct": 1.8,
+    "prevalence_kind": "expected",
+    "rarity": "Epic",
+    "points_now": 232,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "anonymize-traces",
+   "version": 3,
+   "capability": "protect-data-in-traces",
+   "tier": 1,
+   "baseline": false,
+   "family": "systems",
+   "sophistication": 3,
+   "name": "Anonymise chat logs before reusing them",
+   "tagline": "Have AI swap names and emails for the same placeholders.",
+   "cover_line": "Strips personal data from traces.",
+   "adds_over_previous": "Transcripts or traces pass through a systematic anonymization step that consistently replaces personal data before they are shared, kept as eval data or given to another agent.",
+   "variants": [
+    "AI-run anonymization with a private mapping table",
+    "anonymization script written with the AI"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "artifact"
+    ],
+    "present_if": "The person has the AI (or a script it wrote) anonymize transcripts, logs or traces by consistently replacing names, emails, identifiers and similar with placeholders, and the anonymized output is what is then shared, stored as eval data or handed to another agent, in at least 1 session in the window (a tool's own built-in redaction, such as a scanner preparing its upload, does not count).",
+    "signals": {
+     "claude-code": [
+      "anonymization pass or script over traces before sharing or eval use"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "transcript pasted and anonymized on request"
+     ],
+     "chatgpt": [
+      "transcript pasted and anonymized on request"
+     ],
+     "config": [
+      "anonymizer script",
+      "anonymized trace files with placeholders"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Deleting a single name by hand.",
+     "Automatic redaction by the host.",
+     "Anonymizing ordinary documents that are not AI transcripts, logs or traces."
+    ],
+    "probes": [
+     "Did the user have the AI or its script anonymize transcripts, logs or traces with consistent placeholders?",
+     "Was the anonymized output what got shared, stored or handed on, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Real sessions are the best test data, once names and emails are swapped out.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 6,
+    "prevalence_kind": "expected",
+    "rarity": "Rare",
+    "points_now": 122,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "evaluate-people-by-agent-transcripts",
+   "version": 2,
+   "capability": "assess-people-by-ai-use",
+   "tier": 1,
+   "baseline": false,
+   "family": "judgment",
+   "sophistication": 5,
+   "name": "Have AI assess someone's AI sessions",
+   "tagline": "They share their sessions; AI rates them on your criteria.",
+   "cover_line": "Judges skill by agent transcripts.",
+   "adds_over_previous": "A person's skill is assessed by having an AI analyse that person's real agent transcripts, shared with consent, against explicit criteria, instead of relying on interviews or outputs alone.",
+   "variants": [
+    "candidate shares transcripts of a take-home task",
+    "colleague shares sessions for coaching"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "The user has an AI analyse another person's agent session transcripts, shared by that person, against explicit criteria, and produce an assessment, in at least 1 session in the window.",
+    "signals": {
+     "claude-code": [
+      "candidate or colleague transcripts read and scored against criteria"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "shared transcript pasted and scored"
+     ],
+     "chatgpt": [
+      "shared transcript pasted and scored"
+     ]
+    },
+    "min_sessions": 1,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Analysing the user's own sessions (that is instructions-mined-from-own-history).",
+     "Reviewing work output without transcripts.",
+     "Writing interview questions about AI use."
+    ],
+    "probes": [
+     "Did the user have an AI analyse another person's agent transcripts against explicit criteria?",
+     "Was an assessment produced, in at least 1 session in the window?"
+    ]
+   },
+   "teach": {
+    "why": "How someone works with agents shows their judgment better than an interview.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 0.4,
+    "prevalence_kind": "expected",
+    "rarity": "Legendary",
+    "points_now": 350,
+    "first_edition_open": true,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "qa-fact-lookup",
+   "version": 2,
+   "capability": "ask-questions",
+   "tier": 0,
+   "baseline": true,
+   "family": "delegation",
+   "sophistication": 0,
+   "name": "Ask the AI quick questions",
+   "tagline": "Facts, explanations, how-tos: ask instead of searching.",
+   "cover_line": "Asks the AI before searching.",
+   "adds_over_previous": "The user asks the assistant a direct factual or explanatory question and uses the answer, with no further work product requested.",
+   "variants": [
+    "fact lookup",
+    "concept explanation",
+    "how-to question"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user's main request is a factual, explanatory or how-to question and the assistant answers it.",
+    "signals": {
+     "claude-code": [
+      "session whose main request is a question"
+     ],
+     "codex": [
+      "session whose main request is a question"
+     ],
+     "cursor": [
+      "chat whose main request is a question"
+     ],
+     "claude-ai": [
+      "chat whose main request is a question"
+     ],
+     "chatgpt": [
+      "chat whose main request is a question"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Questions asked only as part of a larger work task in the same session."
+    ],
+    "probes": [
+     "Was the user's main request a factual, explanatory or how-to question that was answered?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Faster than searching, and you can ask follow-ups.",
+    "minutes": 3
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "rewrite-edit-text",
+   "version": 2,
+   "capability": "edit-text",
+   "tier": 0,
+   "baseline": true,
+   "family": "delegation",
+   "sophistication": 0,
+   "name": "Have the AI edit your text",
+   "tagline": "Paste your draft: 'proofread', 'shorten', 'make it warmer'.",
+   "cover_line": "Polishes writing with AI.",
+   "adds_over_previous": "The user supplies their own text and has the assistant proofread, rewrite, shorten or change its tone.",
+   "variants": [
+    "proofreading",
+    "tone change",
+    "shortening",
+    "translation of the user's own text"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user has the assistant proofread, rewrite, shorten, translate or change the tone of existing prose that the user wrote or is responsible for (their own draft, message, document or page copy), pasted, attached or in a file, and the assistant returns or writes the edited version. Third-party content, code, configuration and agent instruction files do not count.",
+    "signals": {
+     "claude-code": [
+      "'rewrite / tighten / proofread this' on a prose file or pasted text"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "own text pasted with an editing request"
+     ],
+     "chatgpt": [
+      "own text pasted with an editing request"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "The text is new content drafted from a brief (that is short-form-content).",
+     "The pasted text is someone else's content to be summarised (that is summarize-pasted-content).",
+     "Edits to code, configuration or agent instruction files.",
+     "Reformatting or rewriting third-party content such as a pasted article, post or cheat sheet."
+    ],
+    "probes": [
+     "Did the user ask for existing prose to be proofread, rewritten, shortened, translated or re-toned?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Your message comes out clearer in seconds.",
+    "minutes": 3
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "short-form-content",
+   "version": 3,
+   "capability": "draft-content",
+   "tier": 0,
+   "baseline": true,
+   "family": "delegation",
+   "sophistication": 0,
+   "name": "Have AI draft emails and posts",
+   "tagline": "One line in; a draft email, post or note out.",
+   "cover_line": "Drafts quick messages with AI.",
+   "adds_over_previous": "The assistant produces new short content (under about 300 words) from the user's brief rather than editing the user's own text.",
+   "variants": [
+    "emails and replies",
+    "social posts and captions",
+    "subject lines, announcements, notes"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user asks the assistant to write new short content (under about 300 words: emails, posts, messages, notes) from a brief, and the assistant drafts it. Text a coding agent writes as part of the software work itself does not count.",
+    "signals": {
+     "claude-code": [
+      "request to draft a short email, post or message"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "short draft from a brief"
+     ],
+     "chatgpt": [
+      "short draft from a brief"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Editing text the user wrote (that is rewrite-edit-text).",
+     "Long documents or rendered artifacts (that is request-artifacts).",
+     "Text a coding agent writes as part of software work (commit messages, pull-request descriptions, issue or code-review comments)."
+    ],
+    "probes": [
+     "Did the user ask for new short content from a brief?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "The blank page is gone; you start from a draft.",
+    "minutes": 3
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "summarize-pasted-content",
+   "version": 2,
+   "capability": "digest-content",
+   "tier": 0,
+   "baseline": true,
+   "family": "delegation",
+   "sophistication": 0,
+   "name": "Summarise content you paste",
+   "tagline": "Paste an article or thread; ask for the key points.",
+   "cover_line": "Gets the gist of long reads.",
+   "adds_over_previous": "The user pastes or attaches existing content written by others and has the assistant condense it.",
+   "variants": [
+    "TL;DR of an article or thread",
+    "key points of a report",
+    "meeting notes condensed"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user pastes or attaches content and asks for a summary, key points or TL;DR, and the assistant provides it.",
+    "signals": {
+     "claude-code": [
+      "pasted or attached text with a summary request"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "pasted or attached text with a summary request"
+     ],
+     "chatgpt": [
+      "pasted or attached text with a summary request"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Analysis of data files (that is upload-files-for-analysis).",
+     "The assistant summarised on its own without being asked."
+    ],
+    "probes": [
+     "Did the user paste or attach content and ask for a summary?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Read the essentials first, then decide whether to read the rest.",
+    "minutes": 3
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "upload-files-for-analysis",
+   "version": 2,
+   "capability": "share-files-and-images",
+   "tier": 0,
+   "baseline": true,
+   "family": "context",
+   "sophistication": 0,
+   "name": "Upload files and ask about them",
+   "tagline": "Attach a PDF or image; ask what it shows, not a summary.",
+   "cover_line": "Hands the AI files to analyse.",
+   "adds_over_previous": "The user uploads a file (data, document, image) into the chat and has the assistant analyse its contents.",
+   "variants": [
+    "CSV or spreadsheet analysis",
+    "PDF or document analysis",
+    "image analysis"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user uploads or attaches a file and asks for an analysis of its contents (beyond a summary), and the assistant analyses it.",
+    "signals": {
+     "claude-code": [
+      "user attaches a file or image or points to a data file for analysis"
+     ],
+     "codex": [
+      "same in codex sessions"
+     ],
+     "cursor": [
+      "same in cursor sessions"
+     ],
+     "claude-ai": [
+      "file attachment plus analysis request"
+     ],
+     "chatgpt": [
+      "file attachment plus analysis; code-interpreter run"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Pasted text summarised (that is summarize-pasted-content).",
+     "Files stored in a persistent project (that is project-knowledge-files).",
+     "Screenshots of work in progress sent as feedback (that is screenshot-feedback)."
+    ],
+    "probes": [
+     "Did the user upload or attach a file and ask for analysis of its contents?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Questions about your own data get answered in minutes.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "screenshot-feedback",
+   "version": 2,
+   "capability": "share-files-and-images",
+   "tier": 1,
+   "baseline": false,
+   "family": "context",
+   "sophistication": 2,
+   "name": "Show problems with screenshots",
+   "tagline": "Paste a screenshot of the page and say what to fix.",
+   "cover_line": "Shows problems with screenshots.",
+   "adds_over_previous": "The user shows the AI a screenshot of the current state of the work (the AI's output, the app, the page) to point at a problem, instead of describing it in words.",
+   "variants": [
+    "screenshot of a rendered UI pasted into a coding agent",
+    "screenshot of a chart or document the AI produced"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user attaches a screenshot of the work in progress (output the AI produced, or the app or page being built) together with a request to fix or change something visible in it.",
+    "signals": {
+     "claude-code": [
+      "pasted screenshot image of the app or output with a fix request"
+     ],
+     "codex": [
+      "image attachment with a fix request"
+     ],
+     "cursor": [
+      "image attachment with a fix request"
+     ],
+     "claude-ai": [
+      "screenshot of an artifact with a change request"
+     ],
+     "chatgpt": [
+      "screenshot of output with a change request"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Screenshots of third-party content to be explained or analysed (that is upload-files-for-analysis).",
+     "The agent captured screenshots itself (that is headless-browser-ui-loop)."
+    ],
+    "probes": [
+     "Did the user attach a screenshot of work in progress with a request to fix or change something in it?",
+     "Did this happen in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "One picture replaces a paragraph of 'the thing on the left is a bit off'.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 18,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 49,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "deliberate-web-search",
+   "version": 2,
+   "capability": "search-the-web",
+   "tier": 0,
+   "baseline": true,
+   "family": "tools",
+   "sophistication": 0,
+   "name": "Have the AI search the web",
+   "tagline": "Say 'search the web' or switch search on.",
+   "cover_line": "Sends the AI to search the web.",
+   "adds_over_previous": "The user explicitly asks the assistant to search or browse the web, or switches search on, so answers rest on current sources.",
+   "variants": [
+    "'search the web for ...'",
+    "search toggle switched on by the user",
+    "source-quality constraints such as 'primary sources only'"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user explicitly asks for a web search, browsing or sources, or switches search on, and a search or fetch happens.",
+    "signals": {
+     "claude-code": [
+      "user asks to search the web; WebSearch or WebFetch calls follow"
+     ],
+     "codex": [
+      "user asks for web search; search tool calls follow"
+     ],
+     "cursor": [
+      "user asks for web search; @web or search calls follow"
+     ],
+     "claude-ai": [
+      "user asks to search; search calls follow"
+     ],
+     "chatgpt": [
+      "user asks to search or toggles search on; search runs"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Search triggered automatically by the assistant without the user asking.",
+     "Searches done by a scheduled task's stored prompt (that is scheduled-tasks).",
+     "A deep research run (that is deep-research-mode)."
+    ],
+    "probes": [
+     "Did the user explicitly ask for a search, browsing or sources, or switch search on?",
+     "Did a search or fetch happen, in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Answers about anything recent come with sources you can check.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "deep-research-mode",
+   "version": 2,
+   "capability": "deep-research",
+   "tier": 0,
+   "baseline": true,
+   "family": "tools",
+   "sophistication": 0,
+   "name": "Run deep research",
+   "tagline": "Switch on Deep research or Research; get a cited report.",
+   "cover_line": "Commissions deep research reports.",
+   "adds_over_previous": "The user switches on a deep research mode that runs a long, multi-step research process and returns a cited report.",
+   "variants": [
+    "ChatGPT deep research",
+    "claude.ai Research mode"
+   ],
+   "surfaces": [
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the user switches on a deep research or research mode and a research run completes with a cited report.",
+    "signals": {
+     "claude-ai": [
+      "Research mode on; research run with cited report"
+     ],
+     "chatgpt": [
+      "deep research run with cited report"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "An ordinary web search (that is deliberate-web-search).",
+     "Research split across subagents by the user (that is parallel-research-fanout)."
+    ],
+    "probes": [
+     "Did the user switch on a deep research mode?",
+     "Did a research run complete with a cited report, in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "An afternoon of desk research arrives as a cited report.",
+    "minutes": 10
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "voice-mode",
+   "version": 2,
+   "capability": "talk-to-ai",
+   "tier": 0,
+   "baseline": true,
+   "family": "tools",
+   "sophistication": 0,
+   "name": "Talk with the AI by voice",
+   "tagline": "Turn on voice mode and talk it through out loud.",
+   "cover_line": "Talks things through with AI.",
+   "adds_over_previous": "The user holds a spoken, real-time conversation with the assistant in a voice mode.",
+   "variants": [
+    "ChatGPT voice mode",
+    "claude.ai voice mode"
+   ],
+   "surfaces": [
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript"
+    ],
+    "present_if": "In at least 2 sessions in the window, the session is marked as a voice-mode conversation started by the user.",
+    "signals": {
+     "claude-ai": [
+      "session marked as voice conversation"
+     ],
+     "chatgpt": [
+      "session marked as voice conversation"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "A single voice session.",
+     "Dictation into a typed prompt (that is voice-dictated-prompts)."
+    ],
+    "probes": [
+     "Is the session marked as a voice-mode conversation?",
+     "Are there at least 2 such sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "Think out loud with it while walking or cooking.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 80,
+    "prevalence_kind": "expected",
+    "rarity": "Common",
+    "points_now": 0,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  },
+  {
+   "id": "voice-dictated-prompts",
+   "version": 2,
+   "capability": "talk-to-ai",
+   "tier": 1,
+   "baseline": false,
+   "family": "tools",
+   "sophistication": 2,
+   "name": "Dictate your prompts instead of typing",
+   "tagline": "Use dictation or the mic button in the prompt box.",
+   "cover_line": "Speaks rich briefs instead of typing.",
+   "adds_over_previous": "Speech is transcribed into the typed prompt of a text or agent session, so the user gives long, detailed briefs they would not type.",
+   "variants": [
+    "operating-system dictation",
+    "dictation app that types into the prompt box",
+    "built-in microphone transcription in the chat box"
+   ],
+   "surfaces": [
+    "claude-code",
+    "codex",
+    "cursor",
+    "claude-ai",
+    "chatgpt"
+   ],
+   "detect": {
+    "evidence": [
+     "transcript",
+     "config"
+    ],
+    "present_if": "In at least 2 sessions in the window, user prompts carry a dictation or voice-input marker in the session metadata, or a dictation tool configured by the user shows transcriptions into the prompt, or the user notes in the prompt itself that it was dictated.",
+    "signals": {
+     "claude-code": [
+      "dictation marker or dictation-app insertion; user notes the prompt was dictated"
+     ],
+     "codex": [
+      "same"
+     ],
+     "cursor": [
+      "same"
+     ],
+     "claude-ai": [
+      "microphone transcription marker on typed prompts"
+     ],
+     "chatgpt": [
+      "microphone transcription marker on typed prompts"
+     ],
+     "config": [
+      "dictation tool configured with history in window"
+     ]
+    },
+    "min_sessions": 2,
+    "absent_if": [
+     "The user only discusses, plans or asks about it.",
+     "It appears only in pasted third-party text or in the assistant's explanation/offer that the user did not take up.",
+     "The assistant or tool did it on its own default, without the user's request, config or script causing it.",
+     "Configured but neither fired nor used in the window.",
+     "Spoken voice-mode conversations (that is voice-mode).",
+     "Typos or missing punctuation alone, with no dictation marker."
+    ],
+    "probes": [
+     "Do user prompts carry a dictation marker, a dictation-tool transcription, or an in-prompt note that they were dictated?",
+     "Is that so in at least 2 sessions in the window?"
+    ]
+   },
+   "teach": {
+    "why": "You speak about three times faster than you type, so briefs get richer.",
+    "minutes": 5
+   },
+   "stats": {
+    "prevalence_pct": 18,
+    "prevalence_kind": "expected",
+    "rarity": "Uncommon",
+    "points_now": 49,
+    "first_edition_open": false,
+    "discoverer_handle": null,
+    "editor_pick": false,
+    "published_at": "2026-10-09"
+   }
+  }
+ ]
+}

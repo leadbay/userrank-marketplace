@@ -1,0 +1,29 @@
+{
+  "name": "userrank",
+  "displayName": "UserRank",
+  "version": "1.0.42",
+  "description": "See how you work with AI, share a page you control, and learn the practices you're missing. Your own AI reads your sessions; UserRank gets only names and counts.",
+  "author": {
+    "name": "Leadbay Inc.",
+    "email": "support@userrank.ai",
+    "url": "https://app.userrank.ai"
+  },
+  "homepage": "https://app.userrank.ai",
+  "repository": "https://app.userrank.ai/plugins/userrank.git",
+  "license": "MIT",
+  "keywords": [
+    "ai-practices",
+    "ai-skills",
+    "productivity",
+    "learning",
+    "coaching",
+    "claude-code",
+    "codex",
+    "mcp"
+  ],
+  "icon": "./assets/icon.png",
+  "documentationUrl": "https://app.userrank.ai/docs",
+  "supportUrl": "https://app.userrank.ai/support",
+  "privacyPolicyUrl": "https://app.userrank.ai/privacy",
+  "termsOfServiceUrl": "https://app.userrank.ai/terms"
+}
