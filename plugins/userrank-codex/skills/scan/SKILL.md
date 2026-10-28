@@ -4,7 +4,7 @@ description: "Gets your UserRank when you ask for it (\"Get my UserRank\", show,
 ---
 
 ## 13. Running the scan
-This skill gets the person their UserRank (skill version 1.0.42). It reads the AI sessions on this computer
+This skill gets the person their UserRank (skill version 1.0.43). It reads the AI sessions on this computer
 only after they press Start, and everything they look at or click happens on one browser page, their UserRank page.
 The terminal asks one question and prints a few status lines.
 Never use conversation_search, recent_chats, or memory.
@@ -113,7 +113,7 @@ Nothing is read and no UserRank tool is called before "Start".
 in Codex, "Only Codex": `python3 "<this folder>/collector.py" start --surfaces codex,chatgpt`). It opens the person's UserRank page at once and prints
 `opened` or `not_opened`, then `pairing_code: <code>`, then (only on `not_opened`) the page link; on `not_opened`, say
 "Open your UserRank: <that link>" (once in the whole run). In the same reply, with no text, call `start_scan {host,
-skill_version: "1.0.42", pairing_code: <code>, invite_code?, ref?}` (the invite code or `ref` from the
+skill_version: "1.0.43", pairing_code: <code>, invite_code?, ref?}` (the invite code or `ref` from the
 person's first message, for example "(ref c_…)"). Call it once per run, even if a later step fails. If `start_scan`
 returns an error, say "Your UserRank page says what happened and what to do next." (when the page did not open: "Open
 the link above to see what happened and what to do next.") and stop. If the UserRank tools are not available here,

@@ -12,7 +12,7 @@ import subprocess, sys, tempfile, time, urllib.error, urllib.parse, urllib.reque
 COLLECTOR_VERSION = "1.0.0"
 MCP_ORIGIN = "https://mcp.userrank.ai"  # set at build
 WEB_ORIGIN = "https://app.userrank.ai"
-SKILL_VERSION = "1.0.42"
+SKILL_VERSION = "1.0.43"
 GIT_INVITEES = True  # False in the directory build (package B): no invite suggestions from the git history
 WINDOW_DAYS, SLICE_MAX_SESSIONS, DEEP_SCAN_MAX_SLICES, CANDIDATES_PER_SCAN = 30, 45, 6, 50
 PROMPT_MAX, AGENT_PROMPT_MAX, TURNS_MAX, SCRIPTED_SAMPLE, DAY = 1500, 600, 80, 15, 86400
@@ -410,7 +410,10 @@ def read_claude(path):
 					elif name == "Workflow":
 						s["agents"].append(cut("[workflow] " + json.dumps(redact(inp))[:2000], AGENT_PROMPT_MAX))
 	e = entry.lower()
-	return kind(s, e in ("sdk-cli", "cli-print", "headless", "print"), e.startswith("sdk"))
+	# An app that drives the SDK with its entrypoint cleared (Paseo until 27 Oct 2026) is written "sdk-cli", as `claude
+	# -p` is; `claude -p` takes one prompt, so 2+ typed prompts are a person's and read as the SDK's own "sdk-ts"
+	return kind(s, e in ("sdk-cli", "cli-print", "headless", "print") and not (e == "sdk-cli" and s["human"] >= 2),
+							e.startswith("sdk"))
 
 
 def read_codex(path):
@@ -1020,10 +1023,10 @@ def act_claude(data, p, H):
 		return None
 	e = ACT_ENTRY.search(data)
 	e = e.group(1).decode().lower() if e else ""
-	if e in SCRIPTED_ENTRY:
+	if e in SCRIPTED_ENTRY and e != "sdk-cli":
 		return None
 	out = _days(data, lambda l: b"queued_command" in l or b'"user"' in l and ACT_USER.search(l) and not ACT_X.search(l) and _typed(l))
-	return None if e.startswith("sdk") and len(out) <= 1 else out
+	return None if e.startswith("sdk") and len(out) <= 1 else out  # an sdk-cli one with 2+ prompts: see read_claude
 
 
 def act_codex(data, H, want):
